@@ -1,0 +1,72 @@
+<?xml    version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+                id="Magenest_Movie::movie"
+                title="Movie"
+                module="Magenest_Movie"
+                sortOrder="40"
+                resource="Magenest_Movie::movie"
+        />
+
+        <add
+                id="Magenest_Movie::gird"
+                title="Movie Gird"
+                module="Magenest_Movie"
+                sortOrder="0"
+                parent="Magenest_Movie::movie"
+                resource="Magenest_Movie::gird"
+        />
+
+        <!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+        <add
+                id="Magenest_Movie::requestreport"
+                title="Request Report"
+                module="Magenest_Movie"
+                sortOrder="10"
+                parent="Magenest_Movie::movie"
+                resource="Magenest_Movie::requestreport"
+        />
+
+        <add
+                id="Magenest_Movie::request"
+                title="Request"
+                module="Magenest_Movie"
+                sortOrder="10"
+                action="movie/pagenew/"
+                parent="Magenest_Movie::requestreport"
+                resource="Magenest_Movie::request"
+        />
+
+        <!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+
+        <add
+                id="Magenest_Movie::magenestmovie"
+                title="Magenest Movie"
+                module="Magenest_Movie"
+                sortOrder="10"
+                action="movie/magenestmovie/"
+                parent="Magenest_Movie::gird"
+                resource="Magenest_Movie::magenestmovie"
+        />
+        <add
+                id="Magenest_Movie::magenestdirector"
+                title="Magenest Director"
+                module="Magenest_Movie"
+                sortOrder="20"
+                action="movie/magenestdirector/"
+                parent="Magenest_Movie::gird"
+                resource="Magenest_Movie::magenestdirector"
+        />
+        <add
+                id="Magenest_Movie::magenestactor"
+                title="Magenest Actor"
+                module="Magenest_Movie"
+                sortOrder="30"
+                action="movie/magenestactor/"
+                parent="Magenest_Movie::gird"
+                resource="Magenest_Movie::magenestdirector"
+        />
+    </menu>
+</config>

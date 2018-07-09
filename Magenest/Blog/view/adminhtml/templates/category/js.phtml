@@ -1,0 +1,16 @@
+<?php /** @var $block  \Magenest\Blog\Block\Adminhtml\Category\Edit\Tab\Js */
+$disabledButtons = $block->getDisabledButton();
+?>
+<script>
+    require([
+        "jquery"
+    ], function ($) {
+        "use strict";
+        var arrayDisabled = <?php echo json_encode($disabledButtons); ?>;
+        if(arrayDisabled.length>0){
+            for(var i in arrayDisabled){
+                $("#parent_id"+arrayDisabled[i]).attr('disabled',true);
+            }
+        }
+    });
+</script>

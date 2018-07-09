@@ -1,0 +1,166 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+
+<?php
+/** @var \Magento\Catalog\Pricing\Render\FinalPriceBox $block */
+
+$productId = $block->getSaleableItem()->getId();
+
+/** ex: \Magento\Catalog\Pricing\Price\RegularPrice */
+/** @var \Magento\Framework\Pricing\Price\PriceInterface $priceModel */
+$priceModel = $block->getPriceType('regular_price');
+
+/** ex: \Magento\Catalog\Pricing\Price\FinalPrice */
+/** @var \Magento\Framework\Pricing\Price\PriceInterface $finalPriceModel */
+$finalPriceModel = $block->getPriceType('final_price');
+$idSuffix = $block->getIdSuffix() ? $block->getIdSuffix() : '';
+$schema = ($block->getZone() == 'item_view') ? true : false;
+?>
+<?php if ($block->hasSpecialPrice()): ?>
+    <span class="special-price">
+        <?php /* @escapeNotVerified */
+        echo $block->renderAmount($finalPriceModel->getAmount(), [
+            'display_label' => __('Special Price'),
+            'price_id' => $block->getPriceId('product-price-' . $idSuffix),
+            'price_type' => 'finalPrice',
+            'include_container' => true,
+            'schema' => $schema
+        ]); ?>
+    </span>
+    <span class="old-price">
+        <?php /* @escapeNotVerified */
+        echo $block->renderAmount($priceModel->getAmount(), [
+            'display_label' => __('Regular Price'),
+            'price_id' => $block->getPriceId('old-price-' . $idSuffix),
+            'price_type' => 'oldPrice',
+            'include_container' => true,
+            'skip_adjustments' => true
+        ]); ?>
+    </span>
+<?php else: ?>
+    <?php /* @escapeNotVerified */
+    echo $block->renderAmount($finalPriceModel->getAmount(), [
+        'price_id' => $block->getPriceId('product-price-' . $idSuffix),
+        'price_type' => 'finalPrice',
+        'include_container' => true,
+        'schema' => $schema
+    ]); ?>
+<?php endif; ?>
+
+<?php if ($block->showMinimalPrice()): ?>
+    <?php if ($block->getUseLinkForAsLowAs()): ?>
+        <a href="<?php /* @escapeNotVerified */
+        echo $block->getSaleableItem()->getProductUrl(); ?>" class="minimal-price-link">
+            <?php /* @escapeNotVerified */
+            echo $block->renderAmountMinimal(); ?>
+        </a>
+    <?php else: ?>
+        <span class="minimal-price-link">
+            <?php /* @escapeNotVerified */
+            echo $block->renderAmountMinimal(); ?>
+        </span>
+    <?php endif ?>
+<?php endif; ?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$scopeConfig = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+
+$display_CSS_onLisProduct = $scopeConfig->getValue('stockstore/hellopage/display_stock_status_on_product_list_page', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+//$display_CSS_onShoppingCart = $scopeConfig->getValue('stockstore/hellopage/display_stockstatus_on_shoppingcart', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$ruleQty = $scopeConfig->getValue('stockstore/hellopage/activate_rules', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$defaultCSS = $scopeConfig->getValue('stockstore/hellopage/hide_default_stockstatus', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
+if ($display_CSS_onLisProduct == 1) {
+    $customStockStatusId = $optionText = '';
+    $stockRegistry = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface');
+    $product = $block->getPrice()->getProduct();
+
+    $stockitem = $stockRegistry->getStockItem(
+        $product->getId(),
+        $product->getStore()->getWebsiteId()
+    );
+    $qty = $stockitem->getQty();
+    if ($product->getTypeId() != 'configurable') {
+        if ($ruleQty == 1) {
+            $customStockStatusQtyRuleId = $product->getData('custom_stock_status_qty_rule');
+            if (!empty($customStockStatusQtyRuleId)) {
+                /**
+                 * @var $quantityRuleFactory \Magenest\StockStatus\Model\QuantityRuleFactory
+                 */
+                $quantityRuleFactory = $objectManager->get('Magenest\StockStatus\Model\QuantityRuleFactory');
+                $collection = $quantityRuleFactory->create()->getCollection();
+                $collection->addFieldToSelect('*');
+                $items = $collection->addFieldToFilter('status_id', ['eq' => $customStockStatusQtyRuleId])->getItems();
+                foreach ($items as $item) {
+                    $data = $item->getData();
+                    if (($qty >= $data['qty_from']) && ($qty <= $data['qty_to'])) {
+                        $customStockStatusId = $optionId = $data['rule'];
+                        $attributeId = $product->getResource()->getAttribute('custom_stock_status');
+                        if ($attributeId->usesSource()) {
+                            $optionText = $attributeId->getSource()->getOptionText($optionId);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (empty($optionText)) {
+            $customStockStatusId = $product->getData('custom_stock_status');
+            $attributeId = $product->getResource()->getAttribute('custom_stock_status');
+            if ($attributeId->usesSource()) {
+                $optionText = $attributeId->getSource()->getOptionText($customStockStatusId);
+            }
+        }
+        if (empty($optionText) && $defaultCSS == 0) {
+            $attributeId = $product->getResource()->getAttribute('custom_stock_status');
+            if ($attributeId->usesSource()) {
+                $data = $attributeId->getSource()->getAttribute()->getData();
+                $customStockStatusId = $optionDefaultId = $data['default_value'];
+                $optionText = $attributeId->getSource()->getOptionText($optionDefaultId);
+            }
+        }
+
+        /**
+         * @var  $managerIconFactory \Magenest\StockStatus\Model\ManagerIconFactory
+         */
+        $managerIconFactory = $objectManager->get('Magenest\StockStatus\Model\ManagerIconFactory');
+        $managerIconCollection = $managerIconFactory->create()->getCollection();
+        $results = array();
+        $pathImage = '';
+        foreach ($managerIconCollection as $item) {
+            $data = $item->getData();
+            if ($data['stockstatus_id'] == $customStockStatusId) {
+                /**
+                 * @var $imageHelper \Magenest\StockStatus\Helper\Image
+                 */
+                $imageHelper = $objectManager->get('Magenest\StockStatus\Helper\Image');
+                $pathImage = $imageHelper->getStatusIconUrl($data['stockstatus_id'], $data['path_image']);
+            }
+            $results[] = $item->getData();
+        }
+
+        $numberleft = $product->getData('notice_number_left');
+        if ($numberleft >= $qty) {
+            echo "<p style='font-weight: bolder; float: right;'>Only $qty Left !!!</p><br/>";
+        }
+        if (isset($optionText) && $optionText != null) {
+            ?>
+            <p class='wow rubberBand' data-wow-duration='1s' data-wow-delay='1s' data-wow-iteration='1'
+               id='status'><?php echo $optionText ?></p>
+            <?php
+            if ($pathImage != '') {
+                ?>
+                <img src="<?= $pathImage ?>" class="magenest_icon_custom_stockstatus" width="50px">
+                <?php
+            }
+        }
+    }
+} ?>

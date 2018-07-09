@@ -1,0 +1,27 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Product\Brand
+ */
+?>
+
+<?php
+
+if ($block->isShowBrand()) :
+    $data = $block->getBrand();
+    $mode=$this->getModeDisplay();
+    ?>
+    <div id="logo_name_brand">
+    <a href="<?php echo $data['url']; ?>">
+    <?php  if ($mode=='2' || $mode=='3') : ?>
+            <img style="width: auto;height: 150px" id="brand_logo" src="<?php echo $data['logo']; ?>" alt=<?php echo $data['name'];  ?> />
+            <?php  endif ?>
+    <?php  if ($mode=='1' || $mode=='3') : ?>
+        <p style="text-align: center;font-size: 30px;">
+            <?php echo $data['name'];  ?>
+        </p>
+    <?php  endif ?>
+    </a>
+    </div>
+<?php      endif;  ?>

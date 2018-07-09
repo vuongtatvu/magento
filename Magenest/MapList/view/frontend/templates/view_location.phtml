@@ -1,0 +1,17 @@
+<?php
+// @codingStandardsIgnoreFile
+    $dataView = $block->getLocation();
+    $location = $dataView -> location;
+    $locationInfo = $dataView -> locationInfo;
+    $api_key = 'AIzaSyCe_75jsTgL1JYX2hEAz2xR37HPwvphrvk';
+    $location_website = $location['website'];
+?>
+
+<div>
+    <p><?php echo $location['title'] ?></p>
+    <p><?php echo $location['description'] ?></p>
+    <p><?php echo $location['address'] ?></p>
+    <p><<?php echo "<a href=$location_website></a>"?></p>
+</div>
+
+

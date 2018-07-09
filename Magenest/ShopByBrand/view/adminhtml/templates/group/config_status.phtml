@@ -1,0 +1,28 @@
+<?php
+
+?>
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function ($,modal) {
+        var e = document.getElementById("page_status");
+        var strUser = e.options[e.selectedIndex].value;
+        strUser=parseInt(strUser);
+        var show_in_slide=$( "div[data-ui-id=\"adminhtml-group-edit-0-form-fieldset-element-form-field-show-in-sidebar\"]" );
+        if(strUser==1){
+        }else {
+            show_in_slide.hide();
+        }
+        $("#page_status").change(function () {
+            strUser=parseInt($(this).val());
+            if(strUser==1){
+                show_in_slide.show();
+                $("#page_show_in_sidebar").val('1');
+            }else {
+                show_in_slide.hide();
+                $("#page_show_in_sidebar").val('2');
+            }
+        });
+    });
+</script>

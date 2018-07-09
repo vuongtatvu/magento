@@ -1,0 +1,23 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+
+
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="vendor_listing_data_source" xsi:type="string">Magenest\Vu\Model\ResourceModel\Vendor\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+
+    <virtualType name="Magenest\Vu\Model\ResourceModel\Vendor\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">magenest_test_vendor_vu</argument>
+            <argument name="resourceModel" xsi:type="string">Magenest\Vu\Model\ResourceModel\Vendor</argument>
+        </arguments>
+    </virtualType>
+
+
+
+</config>

@@ -1,0 +1,44 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Brand\Index\Listing
+ */
+?>
+<?php
+$brandUrl = $block->getBrandUrl();
+$imageUrl = $block->getImageUrl();
+$allBrand = $block->getAllBrand();
+$show = $block->getBrandConfig();
+
+
+$alpha = array('123','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+
+?>
+
+<h2 class='brand-heading_title'>Brands</h2>
+
+
+<div class="mn-view-list mn-view-list_style3">
+    <?php for ($i = 0; $i <= 26; $i++) : ?>
+    <?php $data = $this->checkFirstBrand($alpha[$i]); if ($data == 1) : ?>
+        <div class="mn-items">
+            <div class="mn-items-title"><?php if ($data == 1) {
+                echo $alpha[$i];
+} ?>
+                
+            </div>
+            <div class="mn-items-content">
+                    <?php foreach ($allBrand as $brand) : ?>
+                    <?php $load = $block->getBrandsStyle($brand['name']); if ($load == $alpha[$i]) : ?>
+                        <div class="mn-item ">
+                            <a href='<?php echo $brandUrl.$brand['url_key'] ?>' class="brand-img" ><img  src='<?php echo  $block->getImage($brand) ?>' alt='brand1'></a>
+                            <a href="<?php echo $brandUrl.$brand['url_key'] ?>" class="brand-name"><?php echo $brand['name'] ?></a>
+                        </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+        </div>
+        <?php endif; ?>
+    <?php endfor; ?>
+</div>

@@ -1,0 +1,136 @@
+<?php
+/** @var $block \Magenest\StockStatus\Block\Adminhtml\QuantityRule\Ranges */
+
+$customStockStatus = $block->getCustomStockStatus('custom_stock_status');
+$customStockStatusQtyRule = $block->getCustomStockStatus('custom_stock_status_qty_rule');
+$optionStockStatus = $optionStockStatusQtyRule = '';
+$ruleArrs = $block->getQtyRule();
+$baseURL = $block->getBaseUrl();
+if (!empty($customStockStatus) && !empty($customStockStatusQtyRule)) {
+    foreach ($customStockStatus as $stockstatus) {
+        $optionStockStatus .= "<option value='" . $stockstatus['value'] . "'>" . $stockstatus['label'] . "</option>";
+    }
+    foreach ($customStockStatusQtyRule as $stockstatus) {
+        $optionStockStatusQtyRule .= "<option value='" . $stockstatus['value'] . "'>" . $stockstatus['label'] . "</option>";
+    }
+}
+?>
+<style>
+    #button-save-qty-rule {
+        float: right;
+        margin-bottom: 20px;
+    }
+</style>
+<form id="manage_qty_rule" method="post" action="<?= $baseURL . 'admin/mageneststockstatus/qtyrule/manager' ?>"
+      enctype="multipart/form-data" data-mage-init='{"validation":{}}'
+      data-hasrequired="<?php echo __('* Required Fields') ?>">
+    <div id="button-save-qty-rule">
+        <button style="padding: 15px;"
+                class="action-default scalable save primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                title="<?= __('Add New Range Status'); ?>">
+            <span><?= __('Save Rules Quantities'); ?></span>
+        </button>
+    </div>
+    <div id="manage-options-panel">
+        <table cellpadding="5" cellspacing="8" id="ranges_table" class="admin__control-table">
+            <thead>
+            <tr>
+                <th><?php echo __('Quantity From'); ?></th>
+                <th><?php echo __('Quantity To'); ?></th>
+                <th><?php echo __('Custom Stock Status'); ?></th>
+                <th><?php echo __('Stock Status Quantity Rule'); ?></th>
+                <th><?php echo __('Remove'); ?></th>
+            </tr>
+            </thead>
+            <tbody id="ranges_table_body">
+            <?php
+            if (!empty($ruleArrs)):
+                $i = 0;
+                foreach ($ruleArrs as $rule):
+                    ?>
+                    <tr>
+                        <td>
+                            <input type="hidden" name="rule[entity_id][<?= $i ?>]" value="<?= $rule['entity_id'] ?>"/>
+                            <input type="text" name="rule[from][<?= $i ?>]" value="<?= $rule['qty_from'] ?>"/>
+                        </td>
+                        <td>
+                            <input type="text" name="rule[to][<?= $i ?>]" value="<?= $rule['qty_to'] ?>"/>
+                        </td>
+                        <td>
+                            <select name="rule[customStockStatus][<?= $i ?>]">
+                                <?php
+                                $options = '';
+                                foreach ($customStockStatus as $stockstatus):
+                                    if ($stockstatus['label'] == $rule['rule']):
+                                        $options .= "<option value='" . $stockstatus['value'] . "' selected>" . $rule['rule'] . "</option>";
+                                    else:
+                                        $options .= "<option value='" . $stockstatus['value'] . "'>" . $stockstatus['label'] . "</option>";
+                                    endif;
+                                endforeach;
+                                echo $options;
+                                ?>
+                            </select>
+
+                        </td>
+                        <td>
+                            <select name="rule[customeStockStatusQtyRule][<?= $i ?>]">
+                                <?php
+                                $options = '';
+                                foreach ($customStockStatusQtyRule as $stockstatus):
+                                    if ($stockstatus['label'] == $rule['status_id']):
+                                        $options .= "<option value='" . $stockstatus['value'] . "' selected>" . $rule['status_id'] . "</option>";
+                                    else:
+                                        $options .= "<option value='" . $stockstatus['value'] . "'>" . $stockstatus['label'] . "</option>";
+                                    endif;
+                                endforeach;
+                                echo $options;
+                                ?>
+                            </select>
+                        </td>
+                        <td>
+                            <button id="<?= $rule['entity_id'] ?>" class='remove-qty-rule' title='Remove'>
+                                <span>Remove</span></button>
+                        </td>
+                    </tr>
+                    <?php
+                    $i++;
+                endforeach;
+            endif;
+            ?>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <button class="add-new-range" title="<?= __('Add New Range Status'); ?>">
+                        <span><?= __('Add New Range Status'); ?></span>
+                    </button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</form>
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        $('.add-new-range').click(function () {
+            var i = $('#ranges_table_body').children().length;
+            var string = "<tr>" +
+                "<td><input type='hidden' name='rule[entity_id][" + i + "]'/><input type='text' name='rule[from][" + i + "]'/></td>" +
+                "<td><input type='text' name='rule[to][" + i + "]'/></td>" +
+                "<td><select name='rule[customStockStatus][" + i + "]'><?= $optionStockStatus ?> </select></td>" +
+                "<td><select name='rule[customeStockStatusQtyRule][" + i + "]'><?= $optionStockStatusQtyRule ?></select></td>" +
+                "<td><button class='remove-qty-rule' title='Remove'><span>Remove</span></button></td>" +
+                "</tr>";
+            $('#ranges_table_body').append(string);
+            return false;
+        });
+        $('.remove-qty-rule').click(function () {
+            $(this).parent().parent().remove();
+            console.log($(this).parent());
+            return false;
+        });
+
+    });
+</script>

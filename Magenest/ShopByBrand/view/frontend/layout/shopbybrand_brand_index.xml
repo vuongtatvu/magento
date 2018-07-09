@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  layout="2columns-left"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <referenceBlock name="catalog.compare.sidebar" remove="true" />
+        <referenceBlock name="wishlist_sidebar" remove="true" />
+
+        <referenceContainer name="content">
+
+            <block class="Magenest\ShopByBrand\Block\Brand\Index\Listing" name="brand_page_search" template="Magenest_ShopByBrand::brand/index/search.phtml"/>
+
+            <block class="Magenest\ShopByBrand\Block\Featured\Index\Listing\Carousel" name="brand_featured_list_carousel"/>
+
+            <block class="Magenest\ShopByBrand\Block\Category\Index\Listing\Categories" name="brand_category_list"/>
+
+            <block class="Magenest\ShopByBrand\Block\Brand\Index\Listing\Carousel" name="brand_page_list_carousel"/>
+            <block class="Magenest\ShopByBrand\Block\Brand\Index\Listing\FilterRow" name="brand_page_list_filter_row"/>
+            <block class="Magenest\ShopByBrand\Block\Brand\Index\Listing\Grid" name="brand_page_list_grid"/>
+            <block class="Magenest\ShopByBrand\Block\Brand\Index\Listing\FilterColumn" name="brand_page_list_filter_column"/>
+
+        </referenceContainer>
+    </body>
+</page>
+
+
+
+

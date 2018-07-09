@@ -1,0 +1,529 @@
+<?php
+// @codingStandardsIgnoreFile
+/**
+ * Created by PhpStorm.
+ * User: hiennq
+ * Date: 9/23/16
+ * Time: 14:36
+ */
+
+$mapApi = $block->getMapApi();
+$countryCode = $block->getCountry();
+$location = $block->getLocation();
+$productIdList = $block->getSelectedProduct();
+$zoom = $block->getZoom();
+
+$urlGalleryImage = $block->getLocationGalleryImage();
+$urlLocationIcon = $block->getLocationIcon();
+?>
+
+<script>
+    var productSelected = [];
+    <?php foreach ($productIdList as $id){ ?>
+    productSelected.push("<?php echo $id ?>");
+    <?php } ?>
+    var lng = '<?php echo $location['longitude'] ?>';
+    var lat = '<?php echo $location['latitude'] ?>';
+</script>
+
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        'use strict';
+        $(document).ajaxStart(function () {
+            checkProductCheckbox();
+        });
+        $(document).ajaxComplete(function () {
+            //$('#id_3').prop('checked', true);
+            var i;
+            for (i = 0; i < productSelected.length; i++) {
+                $('#maplistProductGrid_table').find('#id_' + productSelected[i]).prop('checked', true);
+            }
+        });
+
+        var content = '<input type="text" class="prettySearchValue" id="pac-input" style="width: 400px" class="controls" type="text" placeholder="Search Location">';
+        $(content).insertBefore("#map");
+        var button = '<button type="button" id="apply_loc_btn">Apply location</button>';
+        $(button).insertAfter('#location_longitude');
+
+        $(function () {
+            $('#edit_form').append('<input type="hidden" name="product_list" id="in_product_list"value="">');
+            $('#save-and-continue').click(function () {
+                checkProductCheckbox();
+                $('#in_product_list').val(JSON.stringify(productSelected));
+            });
+            $('#save').click(function () {
+                checkProductCheckbox();
+                $('#in_product_list').val(JSON.stringify(productSelected));
+            });
+        });
+
+        function checkProductCheckbox() {
+            var id, status, index;
+            $('#maplistProductGrid_table').find('tbody').find('input[type="checkbox"]').each(function () {
+                id = $(this).attr('id');
+                id = id.replace('id_', "");
+                status = $(this).is(":checked");
+                if (status) {
+                    if (productSelected.indexOf(id) < 0) {
+                        productSelected.push(id);
+                    }
+                } else {
+                    if ((index = productSelected.indexOf(id)) > -1) {
+                        delete productSelected[index];
+                    }
+                }
+            });
+        }
+
+//        $('#location_location_categories').find('option').mousedown(function(e) {
+//            e.preventDefault();
+//            $(this).prop('selected', $(this).prop('selected') ? false : true);
+//            return false;
+//        });
+
+    });
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $mapApi ?>&libraries=places"></script>
+
+<script>
+    var default_zoom = parseInt('<?php echo($zoom == "" ? 15 : $zoom) ?>');
+    var geocoder = new google.maps.Geocoder();
+    var myCenter = new google.maps.LatLng(lat, lng);
+    var current_marker = null;
+    var map;
+    require([
+        'jquery'
+    ], function ($) {
+        $(function () {
+            function initialize() {
+                require(['jquery'], function ($) {
+                    var mapProp = {
+                        center: myCenter,
+                        zoom: default_zoom,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    map = new google.maps.Map(document.getElementById("map"), mapProp);
+                    reloadmap();//fix bug map gray
+                    var input = document.getElementById('pac-input');
+                    var searchBox = new google.maps.places.SearchBox(input);
+                    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                    map.addListener('bounds_changed', function () {
+                        searchBox.setBounds(map.getBounds());
+                    });
+
+                    //if location already set
+                    if ((lng != '') && (lat != '')) {
+                        var lat_lng = new google.maps.LatLng(lat, lng);
+                        current_marker = placeMarker(map, lat_lng);
+                        //geocodePosition(current_marker.getPosition());
+                        google.maps.event.addListener(current_marker, 'drag', function (event) {
+                            setLocationInfoToForm(event.latLng.lat(), event.latLng.lng());
+                        });
+                        google.maps.event.addListener(current_marker, 'dragend', function () {
+                            geocodePosition(current_marker.getPosition());
+                        });
+                    } else {
+                        var address = '<?php echo $countryCode ?>';
+                        var geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({'address': address}, function (results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                map.setCenter(results[0].geometry.location);
+                                map.fitBounds(results[0].geometry.bounds);
+                            } else {
+                                console.log("Geocode was not successful for the following reason: " + status);
+                            }
+                        });
+                    }
+
+                    //handle event when click apply location button
+                    $('#apply_loc_btn').on('click', function () {
+                        // Clear out the old markers.
+                        if ((typeof current_marker != 'undefined') && (current_marker != null)) {
+                            current_marker.setMap(null);
+                        }
+                        var latlng = new google.maps.LatLng($('#location_latitude').val(), $('#location_longitude').val());
+                        current_marker = placeMarker(map, latlng);
+                        map.setCenter(current_marker.getPosition());
+                        geocodePosition(current_marker.getPosition());
+                        google.maps.event.addListener(current_marker, 'drag', function (event) {
+                            setLocationInfoToForm(event.latLng.lat(), event.latLng.lng());
+                        });
+                        google.maps.event.addListener(current_marker, 'dragend', function () {
+                            geocodePosition(current_marker.getPosition());
+                        });
+                    });
+
+                    //handle event when click on map
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        //clear old marker
+                        if ((typeof current_marker != 'undefined') && (current_marker != null)) {
+                            current_marker.setMap(null);
+                        }
+                        current_marker = placeMarker(map, event.latLng);
+                        setLocationInfoToForm(event.latLng.lat(), event.latLng.lng());
+                        geocodePosition(marker.getPosition());
+                        google.maps.event.addListener(marker, 'drag', function (event) {
+                            setLocationInfoToForm(event.latLng.lat(), event.latLng.lng());
+                        });
+                        google.maps.event.addListener(marker, 'dragend', function () {
+                            geocodePosition(marker.getPosition());
+                        });
+                    });
+
+                    //handle event when do a search box
+                    // Listen for the event fired when the user selects a prediction and retrieve
+                    // more details for that place.
+                    searchBox.addListener('places_changed', function () {
+                        var places = searchBox.getPlaces();
+                        if (places.length == 0) {
+                            return;
+                        }
+
+                        // Clear out the old markers.
+                        if ((typeof current_marker != 'undefined') && (current_marker != null)) {
+                            current_marker.setMap(null);
+                        }
+
+                        // For each place, get the icon, name and location.
+                        bounds = new google.maps.LatLngBounds();
+                        places.forEach(function (place) {
+                            if (!place.geometry) {
+                                console.log("Returned place contains no geometry");
+                                return;
+                            }
+                            // Create a marker for each place.
+                            var marker = placeMarker(map, place.geometry.location, place.formatted_address);
+
+                            updateMarkerAddress(marker.address);
+                            setLocationInfoToForm(marker.position.lat(), marker.position.lng());
+                            google.maps.event.addListener(marker, 'drag', function (event) {
+                                setLocationInfoToForm(marker.position.lat(), marker.position.lng());
+                            });
+                            google.maps.event.addListener(marker, 'dragend', function () {
+                                //setLocationInfoToForm(marker.position.lat(),marker.position.lng());
+                                geocodePosition(marker.getPosition());
+
+                            });
+
+                            current_marker = marker;
+
+                            if (place.geometry.viewport) {
+                                // Only geocodes have viewport.
+                                bounds.union(place.geometry.viewport);
+                            } else {
+                                bounds.extend(place.geometry.location);
+                            }
+                        });
+                        map.fitBounds(bounds);
+                    });
+
+                });
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize());
+            //google.maps.event.addDomListener(window, 'load', setTimeout('initialize()', 2000));
+        })
+    })
+</script>
+
+<script>
+    function setLocationInfoToForm(lat, lng) {
+        document.getElementById('location_latitude').value = lat;
+        document.getElementById('location_longitude').value = lng;
+    }
+
+    function placeMarker(map, location, address=null) {
+        return marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            draggable: true,
+            address: address
+        });
+    }
+
+    function geocodePosition(pos) {
+        geocoder.geocode({
+            latLng: pos
+        }, function (responses) {
+            if (responses && responses.length > 0) {
+                updateMarkerAddress(responses[0].formatted_address);
+            } else {
+                updateMarkerAddress('Cannot determine address at this location.');
+            }
+        });
+    }
+
+    function updateMarkerAddress(address) {
+        document.getElementById('location_address').value = address;
+    }
+
+    function reloadmap() {
+        //when you resize the map, you lose your zoom and your center
+        //so you need to get them again here
+        z = map.getZoom();
+        c = map.getCenter();
+        google.maps.event.trigger(map, 'resize');
+        //and set them again here
+        map.setZoom(z);
+        map.setCenter(c);
+    }
+
+</script>
+<script>
+
+    require([
+        'jquery'
+    ], function ($) {
+
+        var state_provice = $("#location_state_province");
+
+        if (state_provice.val() == null) {
+            state_provice.prop('disabled', 'disabled');
+        }
+
+        var country = $("#location_country");
+        country.on('change', function () {
+
+            $.ajax({
+                type: "post",
+                url: "<?php echo $block->getUrl('maplist/location/loadstate'); ?>",
+                data: {country: country.val()},
+                success: function (data) {
+                    if (data.length > 0) {
+                        state_provice.prop('disabled', false);
+                        $("#location_state_province option").remove();
+                        $.each(data, function (i, val) {
+                            state_provice
+                                .append($("<option></option>")
+                                    .attr("value", val.code)
+                                    .text(val.name));
+                        });
+                    } else {
+                        state_provice.val('');
+                        state_provice.prop('disabled', 'disabled');
+                    }
+
+
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    var numberGalleryImage = '<?php echo sizeof($urlGalleryImage); ?>';
+    var urlIcon = '<?php echo $urlLocationIcon; ?>';
+    console.log(urlIcon)
+    require([
+        'jquery'
+    ], function ($) {
+        'use strict';
+        var i = 0;
+        if (numberGalleryImage) {
+            for (var i = 0; i < numberGalleryImage; i++) {
+                var arrImages = [];
+                <?php if ($urlGalleryImage != null){ ?>
+                <?php foreach ($urlGalleryImage as $url){ ?>
+                arrImages.push("<?php echo $url ?>");
+                <?php } ?>
+                <?php } ?>
+                var urlImage = arrImages[i];
+                var arrNameImage = urlImage.split('/');
+                var nameImage = arrNameImage[arrNameImage.length - 1];
+                var table_html = "<div class='image item base-image' id='image-gallery" + i + "' data-role='image'>" +
+                    "<div class='product-image-wrapper'>" +
+                    "<input id=\"magenest-sh-image-gallery\" type=\"file\" name=\"gallery\" style=\"display:none\" >" +
+                    "<img alt='' id='preimages" + i + "' class='product-image' name='preimage' src=" + urlImage + ">" +
+                    "<div class='actions'>" +
+                    "<button id='deleteGallery'  type='button' value = '" + nameImage + " --id:" + i + "' class='action-remove' title='Delete image'>" +
+                    "<span>Delete image</span>" +
+                    "</button>" +
+                    "<div class='draggable-handle'></div>" +
+                    "</div>" +
+                    "<div class='image-fade'><span>Hidden</span></div>" +
+                    "</div>" +
+                    "</div>";
+                $('#gallery-image-location').before(table_html);
+            }
+        }
+
+        if (urlIcon) {
+            var arrNameImage = urlIcon.split('/');
+            var nameImage = arrNameImage[arrNameImage.length - 1];
+            var table_html_icon = "<div class='image item base-image' id='image-icon' data-role='image'>" +
+                "<div class='product-image-wrapper'>" +
+                "<input id='magenest-upload-image-icon'  type=\"file\" name=\"icon\" style=\"display:none\" >" +
+                "<img alt='' id='image' value='" + nameImage + "' class='product-image'  src=" + urlIcon + ">" +
+                "<div class='actions'>" +
+                "<button id='deleteIcon' value='" + nameImage + "' type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                "<span>Delete image</span>" +
+                "</button>" +
+                "<div class='draggable-handle'></div>" +
+                "</div>" +
+                "<div class='image-fade'><span>Hidden</span></div>" +
+                "</div>" +
+                "</div>";
+            $('#icon-location').before(table_html_icon);
+            $('#icon-location').hide();
+        }
+        $(document).on('click', '#deleteGallery', function (i) {
+            // var rawNameImage = document.getElementById(idImageDelete).files[0];
+            // var formkey = FORM_KEY;
+            // var file = document.getElementById('magenest-upload-image-gallery').files[0];
+            // var fileInput = document.getElementById('magenest-upload-image-gallery');
+            // var formData = new FormData(fileInput.form);
+            // formData.append('file', fileInput.files[0]);
+            // var rawNameImage = $('#preimage0').val();
+            // var goodName = rawNameImage.replace(' ', '_');
+            // var beautyName = goodName.split('\\');
+            // var bestName = beautyName[beautyName.length-1];
+            var value = i.target.value;
+            var arrValue = value.split(' --id:');
+            var idElem = arrValue[arrValue.length - 1];
+            var idFormDelete = "#image-gallery" + idElem;
+            var nameImageDelete = arrValue[0];
+            var url = '<?php  echo $block->getUrl('maplist/location/uploadimage');?>';
+            var param = {
+                nameDeleteBeforeSave: nameImageDelete
+            };
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: param,
+                type: "POST",
+                dataType: 'json',
+                cache: false
+            }).done(function (data) {
+                console.log(data.message);
+            });
+            $(idFormDelete).remove();
+        });
+
+        $(document).on('click', '#deleteIcon', function (i) {
+            var value = i.target.value;
+            var idFormDelete = "#image-icon";
+            var nameImageDelete = value;
+            var url = '<?php  echo $block->getUrl('maplist/location/uploadicon');?>';
+            var param = {
+                nameDeleteBeforeSave: nameImageDelete
+            };
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: param,
+                type: "POST",
+                dataType: 'json',
+                cache: false
+            }).done(function (data) {
+                console.log(data.message);
+            });
+            $(idFormDelete).remove();
+            $('#icon-location').show();
+        });
+
+        $('#magenest-upload-image-gallery').on('change', function () {
+            var url = '<?php  echo $block->getUrl('maplist/location/uploadimage');?>';
+            var formkey = FORM_KEY;
+            var file = this.files[0];
+            var fileInput = document.getElementById('magenest-upload-image-gallery');
+            var formData = new FormData(fileInput.form);
+            formData.append('file', fileInput.files[0]);
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: formData,
+                type: "POST",
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                cache: false
+            }).done(function (data) {
+                var nameImage = data.name;
+                var table_html = "<div class='image item base-image' id='image-gallery" + i + "' data-role='image'>" +
+                    "<div class='product-image-wrapper'>" +
+                    "<input id='magenest-upload-image-gallery" + i + "' type=\"file\" name=\"gallery\" style=\"display:none\" >" +
+                    "<img alt='' id='preimage" + i + "' value='" + nameImage + "' class='product-image' />" +
+                    "<div class='actions'>" +
+                    "<button id='deleteGallery' value='" + nameImage + " --id:" + i + "' type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                    "<span>Delete image</span>" +
+                    "</button>" +
+                    "<div class='draggable-handle'></div>" +
+                    "</div>" +
+                    "<div class='image-fade'><span>Hidden</span></div>" +
+                    "</div>" +
+                    "</div>";
+                $('#gallery-image-location').before(table_html);
+                if (file) {
+                    var reader = new FileReader();
+                    var elId = "#preimage" + i;
+                    reader.onload = function (e) {
+                        jQuery(elId).attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+                i++;
+            });
+        });
+    });
+</script>
+
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        'use strict';
+
+        $('#magenest-upload-image-icon').on('change', function () {
+            var url = '<?php  echo $block->getUrl('maplist/location/uploadicon');?>';
+            var formkey = FORM_KEY;
+            var file = this.files[0];
+            var fileInput = document.getElementById('magenest-upload-image-icon');
+            var formData = new FormData(fileInput.form);
+            formData.append('file', fileInput.files[0]);
+            console.log(file);
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: formData,
+                type: "POST",
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                cache: false
+            }).done(function (data) {
+                var nameImage = data.name;
+                console.log(nameImage);
+                var table_html_icon = "<div class='image item base-image' id='image-icon' data-role='image'>" +
+                    "<div class='product-image-wrapper'>" +
+                    "<input id='magenest-upload-image-icon'  type=\"file\" name=\"icon\" style=\"display:none\" >" +
+                    "<img alt='' id='image' value='" + nameImage + "' class='product-image' />" +
+                    "<div class='actions'>" +
+                    "<button id='deleteIcon' value='" + nameImage + "' type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                    "<span>Delete image</span>" +
+                    "</button>" +
+                    "<div class='draggable-handle'></div>" +
+                    "</div>" +
+                    "<div class='image-fade'><span>Hidden</span></div>" +
+                    "</div>" +
+                    "</div>";
+                $('#icon-location').before(table_html_icon);
+                $('#icon-location').hide();
+                if (file) {
+                    var reader = new FileReader();
+                    var elId = "#image";
+                    reader.onload = function (e) {
+                        console.log(e);
+                        jQuery(elId).attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script type="text/ini"

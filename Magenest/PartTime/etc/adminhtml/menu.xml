@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+
+        <add
+                id="Magenest_PartTime::parttime"
+                title="PartTime"
+                module="Magenest_PartTime"
+                sortOrder="40"
+                action="parttime/parttime"
+                resource="Magenest_PartTime::parttime"
+        />
+
+    </menu>
+</config>

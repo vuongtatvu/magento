@@ -1,0 +1,21 @@
+<?php
+// @codingStandardsIgnoreFile
+/** @var \Magenest\MapList\Block\Map\ListMap $block */
+$maps = $block->getDataView();
+$baseUrl = $this->getBaseUrl();
+?>
+
+<?php if (!!$maps) { ?>
+    <div class="map-menu">
+            <?php
+            foreach ($maps as $mapData) { ?>
+                    <a target="_blank"
+                       href="<?php echo $baseUrl . "maplist/index/index/id/" . $mapData['map_id'] ?>">
+                        <figure>
+                        <img src="<?php echo $block->getViewFileUrl('Magenest_MapList::images/map.png'); ?>">
+                            <figcaption><?php echo $mapData['title'] ?></figcaption>
+                        </figure>
+                    </a>
+            <?php } ?>
+    </div>
+<?php } ?>

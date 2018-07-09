@@ -1,0 +1,28 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="staff_listing_data_source" xsi:type="string">
+                    Magenest\Staff\Model\ResourceModel\Staff\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+
+    <virtualType name="Magenest\Staff\Model\ResourceModel\Staff\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">magenest_staff</argument>
+            <argument name="resourceModel" xsi:type="string">Magenest\Staff\Model\ResourceModel\Staff</argument>
+        </arguments>
+    </virtualType>
+
+    <!--<type name="Magento\Catalog\Model\Product">-->
+        <!--<plugin name="Packt_Staff::productName" type="Magenest\Staff\Plugin\ProductAround" sortOrder="1"/>-->
+    <!--</type>-->
+
+
+</config>

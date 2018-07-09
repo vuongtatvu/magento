@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magenest_MapList::css/map.css"/>
+        <css src="Magenest_MapList::select2/select2.min.css"/>
+        <css src="Magenest_MapList::css/material-design-iconic-font.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magenest\MapList\Block\Location" name="location.list" template="Magenest_MapList::view_map.phtml" />
+            <block class="Magenest\MapList\Block\Map\Js" template="Magenest_MapList::map/js.phtml" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

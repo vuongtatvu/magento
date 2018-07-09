@@ -1,0 +1,70 @@
+<h2>Magenest Movie table</h2>
+<table border="1px">
+    <tr>
+        <th>Movie Id</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Raing</th>
+        <th>Director Id</th>
+    </tr>
+    <?php foreach ($block->getMovies() as $movie): ?>
+        <tr>
+            <td><?php echo $movie->getMovieId(); ?></td>
+            <td><?php echo $movie->getName(); ?></td>
+            <td><?php echo $movie->getDescription(); ?></td>
+            <td><?php echo $movie->getRating(); ?></td>
+            <td><?php echo $movie->getDirectorId(); ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<br>
+
+<h2>Magenest Actor table</h2>
+<table border="1px">
+    <tr>
+        <th>Actor Id</th>
+        <th>Name</th>
+    </tr>
+    <?php foreach ($block->getActors() as $actor): ?>
+        <tr>
+            <td><?php echo $actor->getActorId(); ?></td>
+            <td><?php echo $actor->getName(); ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<br>
+
+
+<h2>Magenest Movie Director Actor table</h2>
+<table border="1px">
+    <tr>
+        <th>Movie Id</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th>Director</th>
+        <th>Actor</th>
+    </tr>
+    <?php foreach ($block->getMovies() as $movieactor): ?>
+        <tr>
+            <td><?php echo $movieactor->getMovieId(); ?></td>
+            <td><?php echo $movieactor->getName(); ?></td>
+            <td><?php echo $movieactor->getDescription(); ?></td>
+            <td><?php echo $movieactor->getRating(); ?></td>
+            <td><?php echo $block->getNameDirector($movieactor->getDirectorId()); ?></td>
+            <td>
+                <ol>
+                    <?php
+                    $arrActorMovies = $block->getActorMovies($movieactor->getMovieId());
+                    if (count($arrActorMovies) > 0) {
+                        foreach ($arrActorMovies as $actorOfMovie) {
+                            echo "<li>" . $block->getNameActor($actorOfMovie->getActorId()) . '</li>';
+                        }
+                    }
+                    ?>
+                </ol>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<br>

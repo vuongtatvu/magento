@@ -1,0 +1,14 @@
+<?php
+    $collection = $block->isShowBrand();
+    $brandUrl   = $block->getBrandUrl();
+?>
+<?php if(count($collection->getData())): ?>
+<li class="level0 last level-top parent ui-menu-item" >
+<a class="level-top ui-corner-all" href="<?php echo $brandUrl ?>" >Brand</a>
+    <ul class="level0 submenu" >
+        <?php  foreach ($collection as $brand) :  ?>
+        <li><a href="<?php echo $brandUrl."/".$brand->getData('url_key') ?>" ><?php echo $brand->getName() ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</li>
+<?php endif; ?>

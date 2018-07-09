@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2017 Magenest. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="blog"/>
+        <referenceContainer name="content">
+            <block name="blog.post.comments.count" class="Magenest\Blog\Block\Post\Meta" template="post/meta/js.phtml" after="-"/>
+        </referenceContainer>
+        <referenceBlock name="sidebar.additional" remove="true" />
+        <referenceContainer name="sidebar.main" htmlTag="div" htmlClass="blog__sidebar-main">
+            <block name="blog.sidebar.search" class="Magenest\Blog\Block\Sidebar\Search" template="sidebar/search.phtml" before="-"/>
+            <block class="Magenest\Blog\Block\Sidebar\CategoryTree" name="blog.sidebar.category.tree" template="sidebar/category_tree.phtml"/>
+            <block class="Magenest\Blog\Block\Sidebar\Recent" name="blog.sidebar.recent" template="sidebar/recent.phtml"/>
+            <block class="Magenest\Blog\Block\Sidebar\TagCloud" name="blog.sidebar.tag.cloud" template="sidebar/tag_cloud.phtml"/>
+            <block class="Magenest\Blog\Block\Category\Rss" name="blog.sidebar.rss" template="sidebar/rss.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

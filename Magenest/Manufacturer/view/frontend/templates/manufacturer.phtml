@@ -1,0 +1,36 @@
+<?php
+$product = $block->getProduct();
+?>
+
+Manufacturer: <span id="manufacturer_js"><a
+        href="#"><?php echo $product->getAttributeText('manufacturer_id') ?></a></span>
+
+<?php
+
+$manufacturer_id = $product->getData('manufacturer_id');
+
+?>
+
+
+<script>
+    require(
+        [
+            'jquery',
+        ],
+        function ($) {
+            $("#manufacturer_js").on('click', function () {
+                var id = <?php echo $manufacturer_id ?>;
+
+                $.ajax({
+                    type: "get",
+                    url: "<?php echo $block->getUrl('manufacturer/index/show') ?>",
+                    data: 'id=' + id,
+                    success: function (data) {
+                        alert(data);
+                    }
+                });
+            })
+
+        }
+    );
+</script>

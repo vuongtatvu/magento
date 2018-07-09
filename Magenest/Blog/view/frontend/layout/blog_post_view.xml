@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2017 Magenest. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="2columns-right">
+    <update handle="blog_default"/>
+    <body>
+        <referenceContainer name="content">
+            <block name="blog.post.view" class="Magenest\Blog\Block\Post\View" template="post/view.phtml" cacheable="true">
+                <block name="blog.post.comments" class="Magenest\Blog\Block\Post\Meta" template="post/view/comments.phtml"/>
+                <block name="blog.post.related.posts" class="Magenest\Blog\Block\Post\View\RelatedPosts" template="post/view/related_posts.phtml"/>
+                <block name="blog.post.related.products" class="Magenest\Blog\Block\Post\View\RelatedProducts" template="post/view/related_products.phtml"/>
+                <block name="blog.number.visits.view" class="Magenest\Blog\Block\Post\View" template="post/view/view.phtml"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

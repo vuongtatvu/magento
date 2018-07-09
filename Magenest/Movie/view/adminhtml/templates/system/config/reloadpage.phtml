@@ -1,0 +1,10 @@
+<div class="pp-buttons-container">
+    <button id="<?php echo $block->getId() ?>">
+        <span>
+            <?php
+            echo $block->getButtonHtml();
+            echo $block->escapeHtml($block->getButtonLabel());
+            ?>
+        </span>
+    </button>
+</div>

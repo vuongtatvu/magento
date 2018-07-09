@@ -1,0 +1,385 @@
+<?php
+// @codingStandardsIgnoreFile
+//echo $block->sayHello();
+/** @var \Magenest\MapList\Block\Map $block */
+$dataView = $block->getMap();
+$map = $dataView->map;
+$location = $dataView->location;
+if ($location[0]['gallery']!=null) {
+    $nameLocation = $location[0]['title'];
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+    if ($location[0]['gallery'] != null) {
+        $image = [];
+        $image[] = explode(' ; ', $location[0]['gallery']);
+        for ($i = 0; $i < sizeof($image[0]); $i++) {
+            $url[$i] = $mediaUrl . 'catalog/category/' . $image[0][$i];
+        }
+    }
+} else {
+    $nameLocation = null;
+    $url = 0;
+}
+$baseUrl = $this->getBaseUrl() . $this->getRequest()->getRouteName() . "/";
+$defaultLat = -34.397;
+$defaultLng = 150.644;
+if (!!$location) {
+    $defaultLat = $location[0]['latitude'];
+    $defaultLng = $location[0]['longitude'];
+}
+$countrys = $block->getCountry();
+$MAX_ITEM_MAP = 3;
+$i = 0;
+
+?>
+
+<script type='text/javascript'>
+    var default_lat = <?php echo $defaultLng ?>;
+    var default_lng = <?php echo $defaultLng ?>;
+    window.max_item = '<?php echo $MAX_ITEM_MAP; ?>';
+    window.js_array = <?php echo json_encode($location);?>;
+    window.map_id = <?php echo ($map) ? $map['map_id'] : '0' ?>;
+    //console.log(window.js_array);
+</script>
+
+
+<div class="container">
+    <div style="display: none" id="directions_panel">
+        <button id="close_direction_panel">X</button>
+        <h5>Start: <a lat="" lng="" id="direction_from_field"></a></h5>
+        <h5>End: <a lat="" lng="" id="direction_to_field"></a></h5>
+        <div id="direction_control">
+
+            <div style="text-align: center" id="travel_mode">
+
+                <form id="map_travel_mode">
+                    <h8>Select your Travel Mode</h8>
+                    <label class="driving"><input value="DRIVING" id="1" type="radio" name="toggle">
+                        <span class="spantravel" data-mode="DRIVING">
+                        <i class="zmdi zmdi-car" aria-hidden="true"></i>
+                            <!--                        <img src="-->
+                            <?php //echo $block->getViewFileUrl('Magenest_MapList::images/a3.png'); ?><!--">-->
+                    </span>
+                    </label>
+                    <label class="walking"><input value="WALKING" id="2" type="radio" name="toggle">
+                        <span class="spantravel" data-mode="WALKING">
+                        <i class="zmdi zmdi-walk" aria-hidden="true"></i>
+                            <!--                         <img src="-->
+                            <?php //echo $block->getViewFileUrl('Magenest_MapList::images/a2.png'); ?><!--">-->
+                    </span>
+                    </label>
+                    <label class="bicycling"><input value="BICYCLING" id="3" type="radio" name="toggle">
+                        <span class="spantravel" data-mode="BICYCLING">
+                        <i class="zmdi zmdi-bike" aria-hidden="true"></i>
+                            <!--                         <img src="-->
+                            <?php //echo $block->getViewFileUrl('Magenest_MapList::images/a1.png'); ?><!--">-->
+                    </span>
+                    </label>
+                    <label class="transit"><input value="TRANSIT" id="4" type="radio" name="toggle">
+                        <span class="spantravel" data-mode="TRANSIT">
+                        <i class="zmdi zmdi-subway" aria-hidden="true"></i>
+                            <!--                        <img src="-->
+                            <?php //echo $block->getViewFileUrl('Magenest_MapList::images/a4.png'); ?><!--">-->
+                    </span>
+                    </label>
+                </form>
+            </div>
+            <button style="display: none" id="start_route">Get direction</button>
+        </div>
+    </div>
+
+    <div style="display: none"
+        <?php if (($dataView->currentMenu == 'map') && (!!$location)) : ?>
+            class="showDirection"
+        <?php else : ?>
+            class="detailShowDirection"
+        <?php endif; ?>
+         id="showDirection">
+        <div id="right-panel"></div>
+    </div>
+</div>
+
+
+<div class="prettyMapList above cf">
+
+    <div class="map-panel">
+        <?php if (($dataView->currentMenu == 'map') && (!!$location)) { ?>
+            <div class="tab">
+                <button class="tablinks" onclick="openCity(event, 'search-distance')" id="defaultOpen">Search by
+                    distance
+                </button>
+                <button class="tablinks" onclick="openCity(event, 'search-area')">Search by area</button>
+
+            </div>
+
+
+            <div id="search-distance" class="box-search tabcontent">
+
+                <div class="form-group form-inline" style="width: 30%">
+                    <input id="map-input" type="text" name="q" placeholder="<?php echo __('Enter a Location...') ?>"
+                           autocomplete="off" class="input-search-distance input-sm">
+                </div>
+                <div class="range-slider form-inline" style="width: 50%">
+                    <input class="input-range" type="range" value="" min="1" max="">
+                    <span class="range-value"></span>
+                </div>
+
+                <div class="btn-wap">
+                    <button id="reset-search" class="btn-reset-search-distance action primary" title="Reset">
+                        <span>Reset</span>
+                    </button>
+                    <button id="locate-nearest" class="btn-search-distance action primary" title="Store Nearest">
+                        <span>Store Nearest</span>
+                    </button>
+                </div>
+
+            </div>
+            <div id="search-area" class="box-search tabcontent">
+                <form id="form-search">
+                    <fieldset class="fieldset">
+
+                        <div class="field field-search-area">
+                            <div class="control">
+                                <input type="text" id="storename" name="storename" value=""
+                                       placeholder="<?php echo __('Store Name') ?>" class="input-text"
+                                       autocomplete="off"
+                                       aria-required="true">
+                            </div>
+                        </div>
+                        <div class="field field-search-area">
+                            <div class="control">
+                                <select id="country" name="country" title="Country">
+
+                                    <?php foreach ($countrys as $country) : ?>
+                                        <option value="<?php echo $country['value'] ?>"><?php echo $country['label'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field field-search-area">
+                            <div class="control">
+                                <input type="text" id="city" name="city" value=""
+                                       placeholder="<?php echo __('City') ?>"
+                                       class="input-text" autocomplete="off" aria-required="true">
+                            </div>
+                        </div>
+                        <div class="field field-search-area">
+                            <div class="control">
+                                <input type="text" id="state_province" name="state_province" value=""
+                                       placeholder="<?php echo __('State/Province') ?>"
+                                       class="input-text" autocomplete="off" aria-required="true">
+                            </div>
+                        </div>
+                        <div class="field field-search-area">
+                            <div class="control">
+                                <input type="text" id="zip" name="zip" value=""
+                                       placeholder="<?php echo __('Zip code') ?>"
+                                       class="input-text" autocomplete="off" aria-required="true">
+                            </div>
+                        </div>
+                        <div class="field field-search-area">
+                            <div class="btn-wap">
+                                <button id="reset-search-area" type="reset"
+                                        class="btn-reset-search-distance action primary" title="Reset">
+                                    <span>Reset</span>
+                                </button>
+                                <button id="search-area" type="submit" class="btn-search-distance action primary"
+                                        title="Search">
+                                    <span>Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="listStore">
+
+                <h2 style="background-color: grey;color: white;padding: 7px;border-radius: 7px;">List of Stores</h2>
+                <div id="ListContainer">
+                    <select id="location_search" type="text">
+                        <option value="" selected disabled>Select location</option>
+                        <?php foreach ($location as $k => $locationItem) { ?>
+                            <option item-id=<?= $locationItem['location_id'] ?> value="<?= $k ?>"><?= $locationItem['title'] ?></option>
+                        <?php } ?>
+                    </select>
+                    <div id="ajax-loadding">
+                        <img src="<?php echo $block->getViewFileUrl('Magenest_MapList::images/loader.gif'); ?>">
+                    </div>
+                    <ul id="list_listitem" class="unstyled prettyListItems" cur-page="1">
+                        <?php $k = 0; ?>
+                        <?php foreach ($location as $k => $theLocation) { ?>
+                            <li class="li-location" style="" item-id="<?php echo $theLocation['location_id'] ?>"
+                                marker_order="<?= $k ?>">
+                                <div id="div_list_location"
+                                     class="corePrettyStyle prettylink map location div_list_location"
+                                     data-role="collapsible"
+                                     data-mage-init='{"accordion":{"collapsible": true, "active": false, "multipleCollapsible": false}}'>
+                                    <div class="viewLocationDetail clearfix" data-role="title"
+                                         style="font-size: larger">
+                                        <a target="_blank" class="locationTitle"
+                                           href="<?= $block->getUrl('maplist/view/index') . "id/" . $theLocation['location_id'] ?>"><?php echo $theLocation['title'] ?></a>
+                                    </div>
+                                    <!--                Expanded-->
+                                    <div class="mapLocationDetail" data-role="content">
+                                        <div class="mapDescription">
+                                            Short Description:
+                                            <div class="mapDescriptionContent"><?php echo $theLocation['short_description'] ?></div>
+                                        </div>
+                                        <div class="mapAddress">
+                                            Address:
+                                            <div class="mapAddressContent"><?php echo $theLocation['address'] ?></div>
+                                        </div>
+                                        <div class="mapWebsite">
+                                            Website:
+                                            <div class="mapWebsiteContent"><a target="_blank"
+                                                                              onclick="window.location='<?php echo $theLocation['website'] ?>'"><?php echo $theLocation['website'] ?></a>
+                                            </div>
+                                        </div>
+                                        <div class="mapPhone">
+                                            Phone Number:
+                                            <div class="mapPhoneContent"><?php echo $theLocation['phone_number'] ?></div>
+                                        </div>
+                                        <div class="mapEmail">
+                                            Email:
+                                            <div class="mapEmailContent"><a
+                                                        href="mailto:<?php echo $theLocation['email'] ?>?Subject=Hello"
+                                                        target="_top"><?php echo $theLocation['email'] ?></a></div>
+                                        </div>
+                                        <a class="viewLocationPage btn corePrettyStyle" target="_blank"
+                                           href="<?php echo $baseUrl . 'view/index/id/' . $theLocation['location_id'] ?>">View
+                                            Location Detail</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <?php $k++;
+                            if ($k >= $MAX_ITEM_MAP) {
+                                break;
+                            } ?>
+                        <?php } ?>
+                    </ul>
+                </div>
+
+                <div class="pagination">
+                    <input id="btn_prev" type="button" name="prev" value="Prev">
+                    <a id="cur_page">1</a>
+                    <input id="btn_next" type="button" name="next" value="Next">
+                    <input id="btn_reset" type="button" value="Reset">
+
+                </div>
+
+
+                <!--            <select id="location_sort">-->
+                <!--                <option value="" selected disabled>Sort by</option>-->
+                <!--                <option value="name">Name</option>-->
+                <!--                <option value="distance">Distance</option>-->
+                <!--            </select>-->
+            </div>
+
+
+        <?php } else if (($dataView->currentMenu == 'location') && (!!$location)) { ?>
+            <div class="listStore">
+                <h2 href="#" onclick="myClick(0)"><?php echo $location[0]['title'] ?></h2>
+                <div>
+                    Marker:&nbsp;&nbsp;&nbsp;
+                    <img src="<?php echo $location[0]['small_image_url'] ?>" alt="Marker"
+                         style="max-height: 100px; max-width: 100px">
+                </div>
+                <p><br>Short description <?php echo $location[0]['short_description'] ?></p>
+                <p>Description <?php echo $location[0]['description'] ?></p>
+                <p>Address <?php echo $location[0]['address'] ?></p>
+                <p>Website <a target="_blank"
+                              href="<?php echo $location[0]['website'] ?>"><?php echo $location[0]['website'] ?></a>
+                </p>
+                <p>Phone Number <?php echo $location[0]['phone_number'] ?></p>
+                <p>Email <a href="mailto:<?php echo $location[0]['email'] ?>?Subject=Hello"
+                            target="_top"><?php echo $location[0]['email'] ?></a></p>
+                <?php if (isset($location[0]['category'])) {
+                    foreach ($location[0]['category'] as $category) {
+                        echo("<p>" . $category['title'] . "</p>");
+                    }
+                }
+                ?>
+                <div id="image-gallery-frontend">
+                    Image Location <br>
+                    <?php $i = 0; ?>
+                    <?php if($url != null) {?>
+                    <?php foreach ($url as $key => $image):?>
+                        <img class="gallery-location-frontend" id="<?php echo $key ?>" src="<?php echo $image ?>"
+                             alt="Image"
+                             style="max-height: 150px; max-width: 150px">
+                        &nbsp;&nbsp;&nbsp;
+                        <?php $i++; endforeach; ?>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
+
+
+        <div class="box-map">
+            <div id="welcomeText">
+                <?php if (($dataView->currentMenu == 'map') && (!!$map)) { ?>
+                    <h2 style="background-color: grey;color: white;padding: 7px;border-radius: 7px;">
+                        <?php echo $map['title'] ?>
+                    </h2>
+                <?php } ?>
+            </div>
+            <div class="map" id="map"></div>
+
+            <div id="floating-panel">
+                <input onclick="clearMarkers();" type=button value="Hide Markers">
+                <input onclick="showMarkers();" type=button value="Show Markers">
+                <input onclick="deleteMarkers();" type=button value="Delete Markers">
+                <input id="trafficToggle" type=button value="Toggle Traffic Layer">
+            </div>
+        </div>
+        <form style="width: 70%" id="Map-List-Search" class="prettyMapListSearch true">
+            <input class="prettySearchValue controls" id="pac-input" type="text" placeholder="Search place in Map">
+        </form>
+    </div>
+
+</div>
+<script>
+    require([
+        'jquery',
+        'select2'
+    ], function ($) {
+        $('#location_search').select2();
+    })
+</script>
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert'
+    ], function ($, alert) {
+        'use strict';
+        var i = 0;
+        var name = '<?php echo $nameLocation?>';
+        var numberGalleryImage = '<?php if($url!=null){ echo sizeof($url);}?>';
+        if (numberGalleryImage) {
+            for (var i = 0; i < numberGalleryImage; i++) {
+                var arrImages = [];
+                <?php if ($url != null){ ?>
+                <?php foreach ($url as $url){ ?>
+                arrImages.push("<?php echo $url ?>");
+                <?php } ?>
+                <?php } ?>
+            }
+            $(document).on('click', '.gallery-location-frontend', function (i) {
+                    var id = i.target.id;
+                    var src = arrImages[id];
+                    console.log(src);
+                    alert({
+                        title: 'Image ' + name,
+                        content: '<img src="' + src + '">',
+                        actions: {
+                            always: function () {
+                            }
+                        }
+                    })
+                }
+            )
+        }
+    });
+</script>
+

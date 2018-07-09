@@ -1,0 +1,9 @@
+<?xml    version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <event name="create_virtual_product">
+        <observer name="create_virtual_product" instance="Magenest\WeddingEvent\Observer\CreateVirtualProduct"/>
+    </event>
+
+</config>

@@ -1,0 +1,64 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Brand\View\Info
+ */
+?>
+<?php
+$data = $block->getBrandInfo();
+
+$linkShare = $block->getLinkShare();
+
+if (!$linkShare) {
+    return ;
+}
+$not_encode_url = $linkShare;
+$linkShare = urlencode($linkShare);
+$title = urlencode($data['name']);
+$replace = array('{wishlist_url}'=>$not_encode_url ) ;
+$content = strtr($data['meta_description'], $replace);
+$summary = urlencode($content);
+$imageurl = urlencode($data['logo']);
+
+$facebook_share_link = $block->linkShareFace($title, $linkShare, $summary, $imageurl);
+
+$twitter_share_link = $block->linkShareTwitter($linkShare, $content);
+
+$google_share_link = $block->linkShareGoogle($linkShare, $title);
+
+$pinterest_share_link = $block->linkSharePinterest($linkShare, $imageurl, $summary);
+?>
+
+<div class="mn-detail-brand">
+    
+    <div class="box-content">
+        <div class="band-logo">
+            <img src="<?php echo $data['logo'] ?>">
+        </div>
+        <div class="band-detail">
+            <div class="name">
+                <b><?php echo $data['name'] ?></b>
+                <br>
+                <small> <?php echo $data['slogan'] ?> </small>
+            </div>
+            <div class="clearfix">
+                <div class="share-social">
+                    <a href="<?php echo $google_share_link ?>" class="share-goog"></a>
+                    <a href="<?php echo $facebook_share_link ?>"  class="share-face"></a>
+                    <a href="<?php echo $twitter_share_link ?>"  class="share-twi"></a>
+                    <a href="<?php echo $pinterest_share_link ?>"  class="share-prin"></a>
+                </div>
+                <div class="des">
+                    <?php echo $data['description'] ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .mn-detail-brand {
+        background-image: url(<?php echo $data['banner'] ?>);
+    }
+</style>

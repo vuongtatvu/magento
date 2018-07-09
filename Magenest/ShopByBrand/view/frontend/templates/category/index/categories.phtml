@@ -1,0 +1,65 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Category\Index\Listing\Categories
+ */
+?>
+<?php
+$brandUrl       = $block->getBrandUrl();
+$imageUrl       = $block->getImageUrl();
+$allBrand       = $block->filterCategory();
+$show           = $block->getBrandConfig();
+$allBrandCate   = $block->getAllBrandCategory();
+$arrConvert     = $block->convertArray($allBrandCate);
+$parents        = $block->getChildCategory($arrConvert, '2');
+$childF1        = $block->getChildCategory($arrConvert, '3');
+$childF2        = $block->getChildCategory($arrConvert, '4');
+$root           = 0;
+?>
+<h2 class='brand-heading_title'>Category Filter</h2>
+<div class="mn-brand-categories">
+    <?php if($show == 1): ?>
+        <ul class="list-categories">
+            <?php foreach($parents as $parent): ?>
+                <li class="list" >
+                    <a href="<?php echo $brandUrl.'?category='.$parent['id_catagory'] ?>"><?php echo $parent['name'] ?></a>
+                    <ul>
+                    <?php foreach($childF1 as $f1): ?>
+                        <?php if($f1['parent'] == $parent['id_catagory']): ?>
+                        <li id="cat-<?php echo $f1['id_catagory'] ?>">
+                            <a href="<?php echo $brandUrl.'?category='.$f1['id_catagory'] ?>"><?php echo $f1['name'] ?></a>
+                            <ul>
+                                <?php foreach($childF2 as $f2): ?>
+                                    <?php if($f2['parent'] == $f1['id_catagory']): ?>
+                                        <li>
+                                            <a href="<?php echo $brandUrl.'?category='.$f2['id_catagory'] ?>"><?php echo $f2['name']?></a>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</div>
+<div class="mn-view-list mn-view-list_style2">
+    <div class="mn-items">
+        <div class="mn-items-content">
+
+            <?php foreach ($allBrand as $brand) : ?>
+                <div class="mn-item ">
+                        <a href='<?php echo $brandUrl.'/'.$brand['url_key'] ?>' class="brand-img" >
+                            <img  src='<?php echo  $imageUrl.$brand['logo'] ?>' alt=<?php echo $brand['name']  ?> >
+                        </a>
+                        <a href='<?php echo  $brandUrl.'/'.$brand['url_key'] ?>' class="brand-name"><?php echo $brand['name'] ?></a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<?php
+$product = $block->getRoomProductInfo();
+$productcrr = $block->getCurrentProduct();
+$priceonepd = $productcrr->getPrice();
+if ($product) {
+    ?>
+    Number Pc: <span id="number_pc"><?php echo $product->getNumberPc() ?></span><br>
+    Address: <span id="address"><?php echo $product->getAddress() ?></span><br>
+    Food price: <span id="food_price"><?php echo $product->getFoodPrice() ?></span><br>
+    Drink pirce: <span id="drinhk_price"><?php echo $product->getDrinkPrice() ?></span><br>
+    <?php
+}
+?>
+<h2>Account Name</h2>
+<input style="width: 200px" type="email" id="accountname" name="accountname">
+<br>
+<div class="checkmail" id="checkmail"></div>
+<br>
+
+<script>
+    require([
+        'jquery',
+        'Magento_Catalog/js/price-utils'
+    ], function ($, priceUtils) {
+        $('#qty').change(function () {
+            var soluong = this.value;
+            var gia = <?= $priceonepd ?>;
+            var updategia = soluong * gia;
+            updategia = priceUtils.formatPrice(updategia);
+            $('.price').html(updategia);
+
+        });
+
+        $("#accountname").change(function () {
+            var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('cybergame/product/checkmail');?>';
+            var email = $('#accountname').val();
+            var param = {email: email};
+
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: param,
+                type: "POST",
+                dataType: 'json'
+            }).done(function (data) {
+                $('#checkmail').html(data.message);
+                if(data.yes){
+                    $('#checkmail').css('color','blue');
+                }
+                else{
+                    $('#checkmail').css('color','red');
+                }
+            })
+        });
+
+
+    });
+</script>
+
+
+

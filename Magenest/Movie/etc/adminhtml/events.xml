@@ -1,0 +1,13 @@
+<?xml    version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!--<event name="change_rating">-->
+        <!--<observer name="check_rating" instance="Magenest\Movie\Observer\ChangeRating"/>-->
+    <!--</event>-->
+
+    <event name="admin_system_config_changed_section_movie">
+        <observer name="check_text" instance="Magenest\Movie\Observer\ChangeText"/>
+    </event>
+
+</config>

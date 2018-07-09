@@ -1,0 +1,62 @@
+<div class="admin__field field	">
+    <label class="label	admin__field-label"><span>Customer Id</span></label>
+    <div class="admin__field-control control">
+        <input type="text" name="id" id="customer_id" class="admin__control-select" />
+    </div>
+</div>
+<div>
+    <button id="click-me" class="primary" title="Submit" type="button">
+        <span>Submit</span>
+    </button>
+</div>
+
+<div class="col-m-6" id="popup-mpdal" style="display:none;">
+</div>
+
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function ($, modal) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Magenest part-time test',
+                buttons: [{
+                    text: $.mage.__('OK'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-mpdal'));
+            $("#click-me").on('click', function () {
+
+                var customer_id = $('#customer_id').val();
+                var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('vu/index/show');?>';
+                var param = {customer_id: customer_id};
+
+                $.ajax({
+                    showLoader: true,
+                    url: url,
+                    data: param,
+                    type: "POST",
+                    dataType: 'json'
+
+                }).done(function (data) {
+
+                    var noidung = "<p>Email : " + data.email + "</p><p>First Name : " + data.firstname + "</p><p>Last Name : " + data.lastname + "</p> ";
+                    $('#popup-mpdal').html(noidung);
+
+                });
+                $("#popup-mpdal").modal("openModal");
+            });
+
+        }
+    );
+</script>

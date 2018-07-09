@@ -1,0 +1,35 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Brand\Index\Listing
+ */
+?>
+<?php
+$brandUrl = $block->getBrandUrl();
+$imageUrl = $block->getImageUrl();
+$allBrand = $block->getAllBrand();
+$show = $block->getBrandConfig();
+?>
+
+
+<h2 class='brand-heading_title'>Brands</h2>
+
+
+<div class="mn-view-list mn-view-list_style2">
+    <div class="mn-items">
+        <div class="mn-items-content">
+            <?php foreach ($allBrand as $brand) : ?>
+            <div class="mn-item ">
+                <?php  if ($show=='2' || $show=='3') : ?>
+                <a href='<?php echo $brandUrl.$brand['url_key'] ?>' class="brand-img" >
+                    <img  src='<?php echo  $block->getImage($brand) ?>' alt=<?php echo $brand['name']  ?> ></a>
+                <?php  endif ?>
+                <?php  if ($show=='1' || $show=='3') : ?>
+                <a href='<?php echo  $brandUrl.$brand['url_key'] ?>' class="brand-name"><?php echo $brand['name'] ?></a>
+                <?php  endif ?>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>

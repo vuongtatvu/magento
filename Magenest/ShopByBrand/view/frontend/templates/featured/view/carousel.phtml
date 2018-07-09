@@ -1,0 +1,67 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Featured\View\Listing
+ */
+?>
+<?php
+$show = $block->getFeaturedConfig();
+
+$listIds = $block->getListId();
+
+?>
+
+<h2 class='brand-heading_title'>Featured Products</h2>
+
+
+<div class="mn-brand-carousel" style="max-width:600px;margin:auto;">
+    <div class="owl-carousel" data-margin="10" data-responsive='{"0":{"items":2},"480":{"items":2},"600":{"items":2},"992":{"items":4   }}' data-autoplayTimeout="600" data-autoplay="true" data-loop="true">
+        <?php foreach ($listIds as $listId) : ?>
+            <div class="mn-item" style="padding: 5px 20px 20px;">
+                <?php if($show == 1): ?>
+
+                        <div data-th="<?php echo $block->escapeHtml(__('Image Product')) ?>" class="col title">
+                            <?php
+                            /** @var \Magento\Catalog\Model\Product $product */
+                            $product = $block->getItems($listId);
+                            $productImage = $block->getProductImage($product, 'category_page_grid');
+                            ?>
+                            <div class="product-img" style="width: 60px;margin: 0 auto 20px;">
+                                <a href="<?php /* @escapeNotVerified */ echo $product->getProductUrl() ?>" class="product photo product-item-photo" tabindex="-1">
+                                    <?php echo $productImage->toHtml(); ?>
+                                </a>
+                            </div>
+                        </div>
+                        <div data-th="<?php echo $block->escapeHtml(__('Product')) ?>" class="col title">
+                            <b>
+                            <?php
+                            echo $block->getNameProduct($listId);
+                            ?></b>
+                        </div>
+                        <div data-th="<?php echo $block->escapeHtml(__('Price')) ?>" class="col title">
+                            <i>
+                            <?php
+                            echo '$'.$block->getPriceProduct($listId);
+                            ?></i>
+                        </div>
+
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magenest_ShopByBrand/js/owl.carousel'
+    ], function ($) {
+        $(".owl-carousel").each(function(index, el) {
+            var config = $(this).data();
+            config.navText = ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'];
+            config.smartSpeed="800";
+            $(this).owlCarousel(config);
+        });
+    });
+</script>

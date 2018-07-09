@@ -1,0 +1,32 @@
+<?php
+/** @var  \Magenest\ShopByBrand\Block\Product\Relate $block*/
+if ($block->isShow()) :
+    $image = 'upsell_products_list';
+    $title = __('Brand product relate');
+    $items = $block->getItemCollection()->getItems();
+
+?>
+
+<div class="block-title title">
+    <strong id="block-upsell-heading" role="heading"><?php /* @escapeNotVerified */ echo $title; ?></strong>
+</div>
+<div class="products wrapper grid products-grid products-upsell">
+    <ol class="products list items product-items">
+        <?php foreach ($items as $_item) : ?>
+            <li class="item product product-item"  >
+            <div class="product-item-info ">
+                <a href="<?php echo $block->getProductUrl($_item) ?>" class="product photo product-item-photo">
+                    <?php echo $block->getImage($_item, $image)->toHtml(); ?>
+                </a>
+                <div class="product details product-item-details">
+                    <strong class="product name product-item-name"><a class="product-item-link" title="<?php echo $block->escapeHtml($_item->getName()) ?>" href="<?php /* @escapeNotVerified */ echo $block->getProductUrl($_item) ?>">
+                            <?php echo $block->escapeHtml($_item->getName()) ?></a>
+                    </strong>
+                    <?php echo $block->getProductPrice($_item); ?>
+                </div>
+            </div>
+            </li>
+        <?php endforeach ?>
+    </ol>
+</div>
+<?php  endif; ?>

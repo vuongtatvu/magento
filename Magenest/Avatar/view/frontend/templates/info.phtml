@@ -1,0 +1,37 @@
+<div class="block block-dashboard-info">
+    <div class="block-title">
+        <strong>
+            <?= $block->escapeHtml(__('EAV Account Info')); ?>
+        </strong>
+    </div>
+    <div class="block-content">
+        <div class="box box-avatar">
+            <strong class="box-title">
+                <span><?= $block->escapeHtml(__('Avatar')) ?></span>
+            </strong>
+            <div class="box-content">
+                <p>
+                    <img
+                        src="<?= $block->getImage(); ?>"
+                        alt="Customer Avatar Not"
+                        width="250"
+                        height="250">
+                </p>
+            </div>
+        </div>
+
+        <div class="box box-info">
+            <strong class="box-title">
+                <span><?= $block->escapeHtml(__('Information'));?></span>
+            </strong>
+            <div class="box-conten">
+                <p>
+                    <?= $block->escapeHtml($block->getCustomer()->getFirstname()." ".$block->getCustomer()->getLastname()); ?>
+                    <br>
+                    <?= $block->escapeHtml($block->getCustomer()->getEmail()); ?>
+                    <br>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

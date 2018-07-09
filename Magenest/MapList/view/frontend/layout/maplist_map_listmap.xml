@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magenest. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magenest_MapList::css/map_listmap.css" />
+    </head>
+
+    <body>
+        <referenceContainer name="content">
+            <block class="Magenest\MapList\Block\Map\ListMap" name="maplist_map_listmap" template="map/listmap.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

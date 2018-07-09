@@ -1,0 +1,66 @@
+<div>
+    <div class="col-m-6">
+        <div>Staff Type
+            <select name="type" id="type">
+                <option value="1">Lv1</option>
+                <option value="2">Lv2</option>
+                <option value="0">Not Staff</option>
+            </select>
+        </div>
+        <div>Nick Name <input type="text" id="nickname" name="nickname">
+        </div>
+        <div><input type="text" id="customerId" name="customerId" value="<?php echo $block->getId() ?>"
+                       hidden="true">
+        </div>
+
+        <br>
+        <div><input style="align-content: center" type="submit" name="edit" id="edit" value="Update"></div>
+    </div>
+</div>
+
+
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert'
+    ], function ($, alert) {
+        $('#edit').on('click', function (e) { //su kien click vao element co id='send2'
+
+                var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('staff/staff/handle');?>';
+
+                var customerId = $('#customerId').val();
+                var type = $('#type').val();
+                var nickname = $('#nickname').val();
+                var param = {
+                    type: type,
+                    nickname: nickname,
+                    customerId: customerId
+                };
+                
+                $.ajax({
+                    showLoader: true,
+                    url: url,
+                    data: param,
+                    type: "POST",
+                    dataType: 'json'
+                }).done(function (data) {
+                    console.log(data)
+                    // var data2 = JSON.parse(data);
+                    console.log(data.message);
+                    //phan modal
+                    alert({
+                        title: "Some title",//day la title
+                        content: data.message,//day la content
+                        actions: {
+                            always: function () {
+                                console.log('sau khi click vao OK se chay vao cai nay')
+                            }
+                        }
+                    });
+                })
+
+            }
+        )
+    })
+</script>
+

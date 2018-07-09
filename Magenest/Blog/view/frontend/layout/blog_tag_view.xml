@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2017 Magenest. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="2columns-right">
+    <update handle="blog_default"/>
+    <body>
+        <referenceContainer name="content">
+            <block name="blog.tag.view" class="Magenest\Blog\Block\Tag\View" template="tag/view.phtml">
+                <block class="Magenest\Blog\Block\Post\PostList" name="blog.post.list" template="post/list.phtml">
+                    <container name="blog.post.list.additional"/>
+                    <block class="Magenest\Blog\Block\Post\PostList\Toolbar" name="blog.post.list.toolbar" template="post/list/toolbar.phtml">
+                        <block class="Magenest\Blog\Block\Html\Pager" name="pager"/>
+                    </block>
+                    <action method="setToolbarBlockName">
+                        <argument name="name" xsi:type="string">blog.post.list.toolbar</argument>
+                    </action>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

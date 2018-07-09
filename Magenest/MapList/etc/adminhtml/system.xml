@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+        <!--
+        /**
+         * Copyright © 2015 Magenest. All rights reserved.
+         * See COPYING.txt for license details.
+         */
+        -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magenest" translate="label" sortOrder="100">
+            <label>Magenest</label>
+        </tab>
+
+        <section id="maplist" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>Map List</label>
+            <tab>magenest</tab>
+            <resource>Magenest_MapList::maplist_config</resource>
+            <group id="general" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>General</label>
+
+                <field id="show_item_section" translate="label comment" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Show Store Avaliable for Products in Product Details</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="map" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Map config</label>
+                <field id="api" translate="label comment" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Google Api</label>
+                    <comment><![CDATA[You can get google API at <a target="_blank" href="https://console.developers.google.com/apis">here</a>
+                                </br><strong><font color="red">Google Maps JavaScript API, Google Maps Geocoding API, Google Maps Directions API, Google Places API Web Service, Google Static Maps API</font>
+                                </br> Must be enabled. </strong>
+                                ]]>
+                    </comment>
+                </field>
+                <field id="unit" translate="label" type="select" sortOrder="3" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Unit System</label>
+                    <source_model>Magenest\MapList\Model\Config\Source\UnitSystem</source_model>
+                </field>
+                <field id="country" translate="label comment" type="select" sortOrder="3" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Country</label>
+                    <source_model>Magento\Config\Model\Config\Source\Locale\Country</source_model>
+                </field>
+                <field id="zoom" translate="label comment" type="text" sortOrder="4" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Default Zoom</label>
+                </field>
+                <field id="travel_mode" translate="label" type="select" sortOrder="5" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Prefer Travel Mode </label>
+                    <source_model>Magenest\MapList\Model\Config\Source\TravelMode</source_model>
+                </field>
+                <field id="max_distance" translate="label" type="text" sortOrder="6" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Max distance </label>
+                    <comment>Max distance when you search stores around with a radius</comment>
+                    <validate>required-entry validate-greater-than-zero validate-number</validate>
+                </field>
+                <field id="default_distance" translate="label" type="text" sortOrder="7" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Default distance </label>
+                    <comment>Default distance when searching by radius. If not change, the system will find your stores around the default radius.</comment>
+                    <validate>required-entry validate-greater-than-zero validate-number</validate>
+                </field>
+
+            </group>
+
+            <group id="default_opening_time" translate="label" type="text" sortOrder="4" showInStore="1" showInWebsite="1" showInDefault="1">
+                <label>Default Opening Hours for all Stores</label>
+                <field id="default_opening_time_sunday" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sunday</label>
+                </field>
+                <field id="default_opening_time_monday" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Moday</label>
+                </field>
+                <field id="default_opening_time_tuesday" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tuesday</label>
+                </field>
+                <field id="default_opening_time_wednesday" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Wednesday</label>
+                </field>
+                <field id="default_opening_time_thursday" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Thursday</label>
+                </field>
+                <field id="default_opening_time_friday" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Friday</label>
+                </field>
+                <field id="default_opening_time_saturday" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Saturday</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

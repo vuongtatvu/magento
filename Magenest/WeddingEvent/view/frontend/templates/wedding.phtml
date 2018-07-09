@@ -1,0 +1,102 @@
+Bride's email : <input type="text" name="bride_email" id="bride_email">
+Groom's email : <input type="text" name="groom_email" id="groom_email">
+<br>
+<div>
+    <button id="click-me" class="primary" title="Submit">
+        <span>Submit</span>
+    </button>
+</div>
+
+<br><br>
+
+<div>
+    <form method="post"
+          action="<?php echo $block->getUrl('weddingevent/weddingevent/add') ?>"
+          id="form-validate">
+        <div class="col-m-6" id="popup-mpdal" style="display:none;">
+            <title>WEDDING'S TITLE</title>
+            <div>Bride's name : <span id="bride_name" name="bride_name">
+        </span> <input type="checkbox" id="sent_to_bride" name="sent_to_bride" value="1">Sent Email
+            </div>
+            <div>Bride's name : <span id="groom_name" name="groom_name">
+        </span> <input type="checkbox" id="sent_to_groom" name="sent_to_groom" value="1">Sent Email
+            </div>
+            <div>Amount* :<input type="number" id="amount" name="amount" min="0"></div>
+            <div><input type="submit" name="add_to_cart" id="add_to_cart" value="Add To Cart"></div>
+            <div><input type="text" id="wedding_id" name="wedding_id" hidden></div>
+        </div>
+    </form>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert',
+        'Magento_Ui/js/modal/modal'
+    ], function ($,
+                 alert,
+                 modal) {
+
+        $('#click-me').on('click', function () {
+
+                var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('weddingevent/weddingevent/show');?>';
+                var brideEmail = $('#bride_email').val();
+                var groomEmail = $('#groom_email').val();
+                var param = {
+                    brideEmail: brideEmail,
+                    groomEmail: groomEmail
+                };
+
+                $.ajax({
+                    showLoader: true,
+                    url: url,
+                    data: param,
+                    type: "POST",
+                    dataType: 'json'
+                }).done(function (data) {
+                    if (data.message) {
+                        $('#popup-mpdal').hide();
+                        alert({
+                            title: "Some title",//day la title
+                            content: "Not Found ",//day la content
+                            actions: {
+                                always: function () {
+                                    console.log('sau khi click vao OK se chay vao cai nay')
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        $('#popup-mpdal').show(1500);
+
+                        $bridename = data.event['bride_firstname'] + ' ' + data.event['bride_lastname'];
+                        $groomname = data.event['groom_firstname'] + ' ' + data.event['groom_lastname'];
+
+                        
+                        $('#wedding_id').attr('value',data.event['id']);
+                        
+                        $('#bride_name').text($bridename);
+                        $('#groom_name').text($groomname);
+                        $a = data.event['sent_to_bride'];
+                        if ($a == 1) {
+                            $('#sent_to_bride').attr('checked', true);
+                        }
+                        else {
+                            $('#sent_to_bride').attr('checked', false);
+                        }
+                        $a = data.event['sent_to_groom'];
+                        if ($a == 1) {
+                            $('#sent_to_groom').attr('checked', true);
+                        }
+                        else {
+                            $('#sent_to_groom').attr('checked', false);
+                        }
+                    }
+                })
+            }
+        )
+    })
+
+</script>
+
+

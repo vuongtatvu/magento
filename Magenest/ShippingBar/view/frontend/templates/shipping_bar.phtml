@@ -1,0 +1,198 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+$itemsCollection = $cart->getQuote()->getItemsCollection();
+$itemsVisible = $cart->getQuote()->getAllVisibleItems();
+$items = $cart->getQuote()->getAllItems();
+$subTotal = $cart->getQuote()->getSubtotal();
+$grandTotal = $cart->getQuote()->getGrandTotal();
+$totalItems = $cart->getQuote()->getItemsCount();
+$totalQuantity = $cart->getQuote()->getItemsQty();
+
+$goal = $block->getValue();
+$type = $block->getType();
+$displaytype = $block->getDisplayType();
+$idSession = $block->getCustomerSession();
+$idSelect = $block->getSelectGroupCustomer();
+if($idSession == $idSelect) {
+    if ($type == 1) {
+        $goalleft = $goal - $grandTotal;
+    } else {
+        $goalleft = $goal - $totalQuantity;
+    }
+//content
+    $cartEmpty = $block->getCartEmpty();
+    $cartNotEmpty = $block->getCartNotEmpty();
+    $cartGoal = $block->getCartGoal();
+    if ($type == 1) {
+        $cartEmpty = str_replace("{{ruleGoal}}", $goal . "$", $cartEmpty);
+        $cartNotEmpty = str_replace("{{ruleGoal}}", $goal . "$", $cartNotEmpty);
+        $cartNotEmpty = str_replace("{{ruleGoalLeft}}", $goalleft . "$", $cartNotEmpty);
+        $cartGoal = str_replace("{{ruleGoal}}", $goal . "$", $cartGoal);
+    }
+    if ($type == 2 && $goalleft > 1) {
+        $cartEmpty1 = str_replace("{{ruleGoal}}", $goal . " products", $cartEmpty);
+        $cartNotEmpty1 = str_replace("{{ruleGoal}}", $goal . " products", $cartNotEmpty);
+        $cartNotEmpty1 = str_replace("{{ruleGoalLeft}}", $goalleft . " products", $cartNotEmpty);
+        $cartGoal1 = str_replace("{{ruleGoal}}", $goal . " products", $cartGoal);
+    } else {
+        $cartEmpty1 = str_replace("{{ruleGoal}}", $goal . " product", $cartEmpty);
+        $cartNotEmpty1 = str_replace("{{ruleGoal}}", $goal . " product", $cartNotEmpty);
+        $cartNotEmpty1 = str_replace("{{ruleGoalLeft}}", $goalleft . " product", $cartNotEmpty);
+        $cartGoal1 = str_replace("{{ruleGoal}}", $goal . " product", $cartGoal);
+    }
+    $isDisplay = $block->getPageDisplay();
+    $enableDate = $block->getEnableDate();
+    $second = $block->getDelay();
+    $time = "class='wow " . $displaytype . "' data-wow-delay='" . $second . "s'";
+    $fontfamily = $block->getFontFamily();
+    $fontcolor = $block->getFontColor();
+    $fontsize = $block->getFontSize() . "px";
+    $fontweight = $block->getFontWeight();
+    $textalign = $block->getTextAlign();
+    $backgroundcolor = $block->getBackgroundColor();
+
+    $alowClose = $block->getAlowCLose();
+    $autoHide = (int)($block->getAutoHide() + $second) * 1000;
+    $startDate = str_replace('/', '-', $block->getStartDate());
+    $endDate = str_replace('/', '-', $block->getEndDate());
+    $startTime = str_replace(',', '', $block->getStarTime());
+    $endTime = str_replace(',', '', $block->getEndTime());
+    $curr_date = date('d-m-Y');
+    $curr_time = date("his");
+    $dayOfWeek = $block->getDayOfWeek();
+    $curr_day = date('l');
+}else{
+    $time = 0;
+    $fontfamily = 0;
+    $fontcolor = 0;
+    $fontsize = 0;
+    $fontweight = 0;
+    $textalign = 0;
+    $backgroundcolor = 0;
+    $isDisplay = 0;
+    $alowClose = 0;
+    $autoHide = 0;
+}
+
+
+$check = false;
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        #status {
+            font-family: "<?php echo $fontfamily; ?>";
+            font-weight: <?php echo $fontweight; ?>;
+            color:  <?php echo $fontcolor ?>;
+            font-size: <?php echo $fontsize; ?>;
+            border-color: #0000aa;
+            border: 2px solid #FF0000;
+            border-radius: 5px;
+            text-align: <?php echo $textalign;?>;
+            float: left;
+            background-color: <?php echo $backgroundcolor;?>;
+            width: 100%;
+        }
+
+        #close {
+            float: right;
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 1.5rem;
+        }
+
+    </style>
+</head>
+
+<body>
+<?php
+if($idSession == $idSelect) {
+
+    if ($startDate == null) {
+        if ($endDate == null)
+            $check = true;
+        elseif (strtotime($curr_date) <= strtotime($endDate)) {
+            $check = true;
+        }
+    } else {
+        if ($endDate == null) {
+            if (strtotime($curr_date) <= strtotime($endDate))
+                $check = true;
+        } else {
+            if ((strtotime($startDate) <= strtotime($curr_date)) && (strtotime($curr_date) <= strtotime($endDate)))
+                $check = true;
+        }
+
+    }
+    if ($check) {
+        if (($dayOfWeek) && strpos($dayOfWeek, $curr_day) <= 0)
+            $check = false;
+    }
+    if ($check) {
+        if (($startTime) && (($curr_time < $startTime) || ($curr_time > $endTime)))
+            $check = false;
+    }
+}
+?>
+<?php if ($check && $isDisplay) : ?>
+    <div <?php echo $time; ?> data-wow-duration='3s' id='status'>
+
+        <?php
+        if($idSession == $idSelect) {
+
+            if ($type == 1) {
+                if ($grandTotal == null || $grandTotal == 0) {
+                    echo $cartEmpty;
+                } else {
+                    if ($grandTotal > 0 && $grandTotal < $goal) {
+                        echo $cartNotEmpty;
+                    }
+                    if ($grandTotal >= $goal) {
+                        echo $cartGoal;
+                    }
+                }
+            } else {
+                if ($totalQuantity == null || $totalQuantity == 0) {
+                    echo $cartEmpty1;
+                } else {
+                    if ($totalQuantity > 0 && $totalQuantity < $goal) {
+                        echo $cartNotEmpty1;
+                    }
+                    if ($totalQuantity >= $goal) {
+                        echo $cartGoal1;
+                    }
+                }
+            }
+        }
+        ?>
+        <?php if ($alowClose == 1) : ?>
+            <span><a id="close" href="#">x</a></span>
+        <?php endif; ?>
+    </div>
+    <script>
+        require(
+            [
+                'jquery',
+            ],
+            function ($) {
+                $("#close").on('click', function () {
+                    $("#status").remove();
+                });
+                <?php if($block->getAutoHide() > 0): ?>
+                setTimeout(function () {
+                    $("#status").hide('blind', {}, 0)
+                }, <?php echo $autoHide; ?>);
+                <?php endif; ?>
+            }
+        )
+        ;
+    </script>
+<?php endif; ?>
+</body>
+</html>
+
+
+

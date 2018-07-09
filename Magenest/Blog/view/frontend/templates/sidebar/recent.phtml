@@ -1,0 +1,46 @@
+<?php
+//@codingStandardsIgnoreFile
+
+/** @var \Magenest\Blog\Block\Sidebar\Recent $block */
+$collection = $block->getCollection()->setPageSize($this->getPageSize());
+?>
+<div class="block blog__sidebar-recent">
+    <div class="block-title">
+        <strong><?= __('Recent Posts') ?></strong>
+    </div>
+
+    <div class="block-content">
+        <ol class="items">
+            <?php foreach ($collection as $post): ?>
+                <?php
+                $imgPath = $post->getWidgetFeaturedImageUrl($block->getImageWidth(), $block->getImageHeight());
+                ?>
+                <li class="item">
+                    <?php if ($imgPath): ?>
+                        <a class="post_link" href="<?= $post->getUrl() ?>">
+                            <img src="<?= $imgPath ?>" alt="<?= $post->getName() ?>" class="blog__post-featured-image"/>
+                        </a>
+                    <?php endif ?>
+
+                    <a href="<?= $post->getUrl() ?>"><?= $post->getName() ?></a>
+                </li>
+            <?php endforeach ?>
+        </ol>
+    </div>
+</div>
+
+
+<style>
+    .blog__sidebar-recent .item a{
+        color: #333;
+        font-family: 'gotham', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.42857143;
+        font-size: 1.5rem;
+    }
+    .blog__sidebar-recent a:hover {
+        color: #999;
+    }
+
+</style>

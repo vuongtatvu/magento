@@ -1,0 +1,37 @@
+1. Frontend
+
+- View map in the world.
+
+- Automatically find locations by searching.
+
+- Auto-zooms to show all locations or manually set a starting view.
+
+- Optional in page directions (with print option).
+
+- Built in Street View support.
+
+-- Clustered markers for maps with a large numbers of locations
+
+- Sort by distance and name with Geo Location and location search.
+
+- Search for all locations in range with the advanced search function.
+
+- Distances can be shown in KM or Miles (configurable in the settings).
+
+- Use geolocation for directions.
+
+- Combo search allows users to search by text and location.
+
+- Map only or list only options.
+
+2. Backend
+
+- Creates searchable, sortable, filterable lists in seconds.
+
+- Per category markers – set a different marker for each location category from the hundreds built in.
+
+- Featured images in locations and info windows.
+
+- Manually specify locations using Latitude/Longitude.
+
+- Auto updating lists – Lists will automatically update when locations are added.

@@ -1,0 +1,68 @@
+<?php
+$members = $block->getMembers();
+?>
+
+<select name="member" id="memberselect" style="width: 200px">
+    <option value="" selected></option>
+    <?php
+    foreach ($members as $member) {
+        echo "<option value=" . $member->getMemberId() . ">" . $member->getName() . "</option>";
+    }
+    ?>
+</select>
+<br>
+<div>
+    <form method="post"
+          action="<?php echo $block->getUrl('parttime/part/edit'); ?>"
+          id="form-validate">
+        <div class="col-m-6">
+            <title>Info Member</title>
+            <div>Name : <input type="text" id="name" name="name">
+            </div>
+            <div>Address : <input type="text" id="address" name="address">
+            </div>
+            <div>Phone : <input type="text" id="phone" name="phone">
+            </div>
+            <div>Created Time :<input type="date" id="created_time" name="created_time">
+            </div>
+            <div>Updated Time : <input type="date" id="updated_time" name="updated_time">
+            </div>
+            <div><input type="submit" name="edit" id="edit" value="Edit"></div>
+            <div><input type="text" id="member_id" name="member_id" hidden></div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, modal) {
+
+        $('#memberselect').change(function () {
+            var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('parttime/part/info');?>';
+            var id = $('#memberselect').val();
+
+            var param = {member_id: id};
+
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: param,
+                type: "POST",
+                dataType: 'json'
+            }).done(function (data) {
+
+                $('#member_id').attr('value', data.member_id);
+                $('#name').attr('value', data.name);
+                $('#address').attr('value', data.address);
+                $('#phone').attr('value', data.phone);
+                $('#created_time').attr('value', data.created_time);
+                $('#updated_time').attr('value', data.updated_time);
+
+            })
+        });
+    })
+
+</script>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magenest_ShopByBrand::css/owl.carousel.css"/>
+        <css src="Magenest_ShopByBrand::css/style.css"/>
+    </head>
+    <body>
+
+        <referenceContainer name="sidebar.additional">
+            <block class="Magenest\ShopByBrand\Block\Group\SideBar\Filter" name="group_sidebar_filter"  />
+            <block class="Magenest\ShopByBrand\Block\Brand\SideBar\Carousel" name="brand_sidebar_carousel"  />
+            <block class="Magenest\ShopByBrand\Block\Brand\SideBar\Thumb" name="brand_sidebar_thumb"  />
+            <block class="Magenest\ShopByBrand\Block\Brand\SideBar\Filter" name="brand_sidebar_filter"  />
+        </referenceContainer>
+    </body>
+</page>

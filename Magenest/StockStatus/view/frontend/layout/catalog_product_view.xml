@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<page layout="2columns-left" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magenest_StockStatus/css/status.css"/>
+        <css src="Magenest_StockStatus/css/animate.css"/>
+        <link src="Magenest_StockStatus/js/wow.min_.js"/>
+
+
+    </head>
+    <body>
+
+        <referenceContainer name="product.info.stock.sku">
+            <block class="Magenest\StockStatus\Block\Product\Status" name="stock_status"
+                   template="Magenest_StockStatus::Status.phtml"/>
+        </referenceContainer>
+
+        <referenceBlock name="product.info.sku" remove="false"/>
+
+
+    </body>
+
+
+</page>

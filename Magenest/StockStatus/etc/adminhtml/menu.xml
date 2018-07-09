@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magenest_StockStatus::magenest"
+             title="Custom Stock Status"
+             module="Magenest_StockStatus"
+             sortOrder="80"
+             resource="Magenest_StockStatus::magenest"
+        />
+
+        <add id="Magenest_StockStatus::stockstatus"
+             title="Config Custom Stock Status"
+             module="Magenest_StockStatus"
+             action="adminhtml/system_config/edit/section/stockstore/"
+             sortOrder="60"
+             parent="Magenest_StockStatus::magenest"
+             resource="Magenest_StockStatus::stockstatus"
+        />
+
+        <add id="Magenest_StockStatus::magenest_stockstatus_qtyrule"
+             title="Manager Quantity Rule"
+             module="Magenest_StockStatus"
+             action="mageneststockstatus/index/index"
+             sortOrder="60"
+             parent="Magenest_StockStatus::magenest"
+             resource="Magenest_StockStatus::magenest_stockstatus_qtyrule"
+        />
+
+        <add id="Magenest_StockStatus::magenest_stockstatus_icon"
+             title="Manager Icon"
+             module="Magenest_StockStatus"
+             action="mageneststockstatus/icon/index"
+             sortOrder="60"
+             parent="Magenest_StockStatus::magenest"
+             resource="Magenest_StockStatus::magenest_stockstatus_icon"
+        />
+    </menu>
+
+</config>

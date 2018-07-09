@@ -1,0 +1,68 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<div></div>
+<?php /** @var \Magento\Framework\Pricing\Render\Amount $block */ ?>
+<span class="price-container <?php /* @escapeNotVerified */ echo $block->getAdjustmentCssClasses() ?>"
+        <?php echo $block->getSchema() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '' ?>>
+    <?php if ($block->getDisplayLabel()): ?>
+        <span class="price-label"><?php /* @escapeNotVerified */ echo $block->getDisplayLabel(); ?></span>
+    <?php endif; ?>
+    <span <?php if ($block->getPriceId()): ?> id="<?php /* @escapeNotVerified */ echo $block->getPriceId() ?>"<?php endif;?>
+        <?php echo($block->getPriceDisplayLabel()) ? 'data-label="' . $block->getPriceDisplayLabel() . $block->getPriceDisplayInclExclTaxes() . '"' : '' ?>
+        data-price-amount="<?php /* @escapeNotVerified */ echo $block->getDisplayValue(); ?>"
+        data-price-type="<?php /* @escapeNotVerified */ echo $block->getPriceType(); ?>"
+        class="price-wrapper <?php /* @escapeNotVerified */ echo $block->getPriceWrapperCss(); ?>"
+        <?php echo $block->getSchema() ? ' itemprop="price"' : '' ?>>
+        <?php /* @escapeNotVerified */ echo $block->formatCurrency($block->getDisplayValue(), (bool)$block->getIncludeContainer()) ?>
+    </span>
+    <?php if ($block->hasAdjustmentsHtml()): ?>
+        <?php echo $block->getAdjustmentsHtml() ?>
+    <?php endif; ?>
+    <?php if ($block->getSchema()): ?>
+        <meta itemprop="priceCurrency" content="<?php /* @escapeNotVerified */ echo $block->getDisplayCurrencyCode()?>" />
+    <?php endif; ?>
+</span>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$scopeConfig = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+
+$display_CSS_onLisProduct = $scopeConfig->getValue('stockstore/hellopage/display_stock_status_on_product_list_page', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$display_CSS_onShoppingCart = $scopeConfig->getValue('stockstore/hellopage/display_stockstatus_on_shoppingcart', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$ruleQty = $scopeConfig->getValue('stockstore/hellopage/activate_rules', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$defaultCSS = $scopeConfig->getValue('stockstore/hellopage/hide_default_stockstatus', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
+if($display_CSS_onLisProduct == 1) {
+    $stockRegistry = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface');
+    $product = $block->getPrice()->getProduct();
+
+    $stockitem = $stockRegistry->getStockItem(
+        $product->getId(),
+        $product->getStore()->getWebsiteId()
+    );
+    if ($product->getTypeId() != 'configurable') {
+        $productArray = [];
+        $productArray['type'] = $product->getTypeId();
+        $productArray['price'] = $product->getPrice();
+        $productArray['sku'] = $product->getSku();
+        $qty = $stockitem->getQty();
+        $productArray['status'] = $product->getData('custom_stock_status');
+        $productArray['numberleft'] = $product->getData('notice_number_left');
+        if ($productArray['numberleft'] >= $qty) {
+            echo "<p style='font-weight: bolder; float: right;'>Only $qty Left !!!</p>";
+
+            echo '<br />';
+        }
+        if (isset($productArray['status']) && $productArray['status'] != null) {
+            ?>
+            <p class='wow rubberBand' data-wow-duration='1s' data-wow-delay='1s' data-wow-iteration='1'
+               id='status'><?php echo $productArray['status'] ?></p>
+        <?php }
+    }
+}?>

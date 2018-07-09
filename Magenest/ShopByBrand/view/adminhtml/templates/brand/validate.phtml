@@ -1,0 +1,135 @@
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        'use strict';
+
+        var urlbanner = "<?php echo $block->getBanner(); ?>";
+        if (urlbanner) {
+            var table_html_banner = "<div class='image item base-image' id='image-banner' data-role='image'>" +
+                "<div class='product-image-wrapper'>" +
+                "<img alt='' id='imagebanner'  class='product-image'  src='" + urlbanner + "' />" +
+                "<div class='actions'>" +
+                "<button id='deletebanner'  type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                "<span>Delete image</span>" +
+                "</button>" +
+                "<div class='draggable-handle'></div>" +
+                "</div>" +
+                "<div class='image-fade'><span>Hidden</span></div>" +
+                "</div>" +
+                "</div>";
+            $('#banner-location').before(table_html_banner);
+            $('#banner-location').hide();
+        }
+
+        $(document).on('click', '#deletebanner', function () {
+            document.getElementById('magenest-upload-image-banner').value = "";
+            var url = '<?php  echo $block->getUrl('shopbybrand/brand/uploadbanner');?>';
+            var param = {
+                id: $('#page_brand_id').val()
+            };
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: param,
+                type: "POST",
+                dataType: 'json',
+                cache: false
+            }).done(function (data) {
+            });
+            $('#image-banner').remove();
+            $('#banner-location').show();
+        });
+
+        $('#magenest-upload-image-banner').on('change', function () {
+            var file = document.getElementById('magenest-upload-image-banner').files[0];
+
+            var table_html_banner = "<div class='image item base-image' id='image-banner' data-role='image'>" +
+                "<div class='product-image-wrapper'>" +
+                "<img alt='' id='imagebanner'  class='product-image'  />" +
+                "<div class='actions'>" +
+                "<button id='deletebanner' type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                "<span>Delete image</span>" +
+                "</button>" +
+                "<div class='draggable-handle'></div>" +
+                "</div>" +
+                "<div class='image-fade'><span>Hidden</span></div>" +
+                "</div>" +
+                "</div>";
+            $('#banner-location').before(table_html_banner);
+            $('#banner-location').hide();
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    jQuery('#imagebanner').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        var urllogo = "<?php echo $block->getLogo(); ?>";
+        if (urllogo) {
+            var table_html_logo = "<div class='image item base-image' id='image-logo' data-role='image'>" +
+                "<div class='product-image-wrapper'>" +
+                "<img alt='' id='imagelogo'  class='product-image'  src='" + urllogo + "' />" +
+                "<div class='actions'>" +
+                "<button id='deletelogo'  type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                "<span>Delete image</span>" +
+                "</button>" +
+                "<div class='draggable-handle'></div>" +
+                "</div>" +
+                "<div class='image-fade'><span>Hidden</span></div>" +
+                "</div>" +
+                "</div>";
+            $('#logo-location').before(table_html_logo);
+            $('#logo-location').hide();
+        }
+
+        $(document).on('click', '#deletelogo', function () {
+            document.getElementById('magenest-upload-image-logo').value = "";
+            var url = '<?php  echo $block->getUrl('shopbybrand/brand/uploadlogo');?>';
+            var param = {
+                id: $('#page_brand_id').val()
+            };
+            $.ajax({
+                showLoader: true,
+                url: url,
+                data: param,
+                type: "POST",
+                dataType: 'json',
+                cache: false
+            }).done(function (data) {
+            });
+            $('#image-logo').remove();
+            $('#logo-location').show();
+        });
+
+        $('#magenest-upload-image-logo').on('change', function () {
+            var file = document.getElementById('magenest-upload-image-logo').files[0];
+
+            var table_html_logo = "<div class='image item base-image' id='image-logo' data-role='image'>" +
+                "<div class='product-image-wrapper'>" +
+                "<img alt='' id='imagelogo'  class='product-image' />" +
+                "<div class='actions'>" +
+                "<button id='deletelogo' type='button' class='action-remove' data-role='delete-button' title='Delete image'>" +
+                "<span>Delete image</span>" +
+                "</button>" +
+                "<div class='draggable-handle'></div>" +
+                "</div>" +
+                "<div class='image-fade'><span>Hidden</span></div>" +
+                "</div>" +
+                "</div>";
+            $('#logo-location').before(table_html_logo);
+            $('#logo-location').hide();
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    jQuery('#imagelogo').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+    });
+
+</script>

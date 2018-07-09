@@ -1,0 +1,29 @@
+<?xml	version="1.0"?>
+<config	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource	id="Magento_Backend::marketing">
+                    <resource	id="Magenest_StockStatus::helloworld" title="StockStatus"	sortOrder="60">
+                        <resource	id="Magenest_StockStatus::index" title="StockStatus	index"	/>
+                    </resource>
+                </resource>
+
+                <resource id="Magento_Backend::stores">
+                    <resource	id="Magento_Backend::stores_settings">
+                        <resource	id="Magento_Config::config">
+                            <resource	id="Magenest_StockStatus::config_helloworld" title="Stock Status"	/>
+                        </resource>
+                    </resource>
+                </resource>
+
+                <resource id="Magento_Backend::magenest" title="Custom Stock Status">
+                    <resource id="Magenest_StockStatus::magenest_stockstatus_qtyrule" title="Manager Quantity Rule" />
+                    <resource id="Magenest_StockStatus::magenest_stockstatus_icon" title="Manager Icon" />
+                </resource>
+
+            </resource>
+        </resources>
+    </acl>
+</config>

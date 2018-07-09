@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<config	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <shopbybrand>
+            <general>
+                <enabled>1</enabled>
+                <attribute>0</attribute>
+            </general>
+            <brandpage>
+                <featured_product>0</featured_product>
+                <featured_brand>0</featured_brand>
+                <categories_brand>1</categories_brand>
+                <show_slider>0</show_slider>
+            </brandpage>
+            <group>
+                <sidebar>1</sidebar>
+            </group>
+            <sidebar>
+                <template>2</template>
+            </sidebar>
+            <brandstyle>
+                <template>2</template>
+            </brandstyle>
+            <list>
+                <show>3</show>
+            </list>
+            <product>
+                <show>3</show>
+                <relate>4</relate>
+            </product>
+            <page>
+                <url>brand</url>
+                <title>Brand</title>
+            </page>
+        </shopbybrand>
+    </default>
+</config>

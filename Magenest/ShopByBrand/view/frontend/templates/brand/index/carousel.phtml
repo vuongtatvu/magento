@@ -1,0 +1,45 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Brand\Index\Listing
+ */
+?>
+<?php
+$brandUrl = $block->getBrandUrl();
+$imageUrl = $block->getImageUrl();
+$allBrand = $block->getAllBrand();
+$show = $block->getBrandConfig();
+?>
+
+<h2 class='brand-heading_title'>Brands</h2>
+
+<div class="mn-brand-carousel">
+    <div class="owl-carousel" data-margin="10" data-responsive='{"0":{"items":2},"480":{"items":2},"600":{"items":2},"992":{"items":6}}' data-autoplayTimeout="600" data-autoplay="true" data-loop="true">
+        <?php foreach ($allBrand as $brand) : ?>
+        <div class="mn-item" >
+            <?php  if ($show=='2' || $show=='3') : ?>
+            <a href='<?php echo $brandUrl.$brand['url_key'] ?>' class="brand-img" >
+                <img  src='<?php echo  $block->getImage($brand) ?>' alt=<?php echo $brand['name'] ?> ></a>
+            <?php  endif ?>
+            <?php  if ($show=='1' || $show=='3') : ?>
+            <a href='<?php echo $brandUrl.$brand['url_key'] ?>' class="brand-name"><?php echo $brand['name'] ?></a>
+            <?php  endif ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magenest_ShopByBrand/js/owl.carousel'
+    ], function ($) {
+        $(".owl-carousel").each(function(index, el) {
+            var config = $(this).data();
+            config.navText = ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'];
+            config.smartSpeed="800";
+            $(this).owlCarousel(config);
+        });
+    });
+</script>

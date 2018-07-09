@@ -1,0 +1,54 @@
+<div id='childProduct'></div>
+
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        $('#product-options-wrapper').on('click', function () {
+
+            var color = $('.swatch-attribute-selected-option').text();
+            var id = <?php echo $this->getProductId();?>;
+            var param = {id: id, color: color};
+            var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('stockstatus/product/status');?>';
+
+            $.ajax({
+                showLoader: true,
+                type: "POST",
+                url: url,
+                data: param,
+                dataType: 'JSON'
+            }).done(function (data) {
+                
+                var numberleft = data.numberleft;
+                var qty = data.qty;
+                var status = data.status;
+                var pathImage = data.image;
+                
+                var s = '';
+                if (data.type != 'configurable') {
+                    if (numberleft >= qty && qty != null) {
+                        s += "<br /><p style='font-weight: bolder; float: right;'>Only " + qty + " Left !!!</p>";
+                        s += '<br />';
+                    }
+
+                    if (status != null) {
+                        s += "<p  style='visibility: visible; float: right; clear: both' data-wow-duration='1s' data-wow-delay='1s' data-wow-iteration='1' id='status'>" + status + "</p>";
+                        s += "<br />";
+                        
+                    }
+                    if (pathImage != null) {
+                        s += "<img src='" + pathImage + "' style='float: right; clear: both' class=' magenest_icon_custom_stockstatus' width='50px'>";
+                        s += "<br />";
+                    }
+                }
+
+                $('#childProduct').html(s);
+
+            })
+
+        });
+    })
+</script>
+
+
+

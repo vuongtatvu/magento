@@ -1,0 +1,73 @@
+<h1>Manufacturer Form</h1>
+
+<div>
+    <form method="post"
+          action="<?php echo $block->getUrl('manufacturer/index/add'); ?>"
+          id="form-validate">
+        <div class="col-m-6">
+
+            <div>Manufacturer Name : <input type="text" id="name" name="name">
+            </div>
+            <div>Enabled : <input type="checkbox" id="enabled" name="enabled" value="1">
+            </div>
+            <div>Street address : <input type="text" id="address_street" name="address_street">
+            </div>
+            <div>City :<input type="text" id="address_city" name="address_city">
+            </div>
+            <div>Country :
+                <?php
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $_countryCollectionFactory = $objectManager->get('\Magento\Directory\Model\ResourceModel\Country\CollectionFactory');
+                $_countries = $_countryCollectionFactory->create()->loadByStore()->getData();
+                
+                if (count($_countries) > 0): ?>
+                    <select name="address_country" id="address_country">
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($_countries as $_country): ?>
+                            <option value="<?php echo $_country['country_id'] ?>">
+                                <?php echo $_country['country_id'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                <?php endif; ?>
+            </div>
+            <div>Contact name : <input type="text" id="contact_name" name="contact_name">
+            </div>
+            <div>Contact telephone : <input type="text" id="contact_phone" name="contact_phone">
+            </div>
+            <br>
+            <div><input style="align-content: center" type="submit" name="edit" id="edit" value="Add"></div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
+<h1>Manufacturer list</h1>
+<?php if ($block->getManufacturer()->count()): ?>
+    <table class="data-grid" style="width: 100%">
+        <thead>
+        <tr>
+            <th><?php echo __('Name') ?></th>
+            <th><?php echo __('Enabled') ?></th>
+            <th><?php echo __('Address Street') ?></th>
+            <th><?php echo __('Address City') ?></th>
+            <th><?php echo __('Address Country') ?></th>
+            <th><?php echo __('Contact Name') ?></th>
+            <th><?php echo __('Contact Phone') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($block->getManufacturer() as $manufacturer) : ?>  
+            <tr>
+                <td><?php echo $manufacturer->getName(); ?></td>
+                <td><?php echo ($manufacturer->getEnabled() == 1) ? 'Yes' : 'No'; ?></td>
+                <td><?php echo $manufacturer->getAddressStreet(); ?></td>
+                <td><?php echo $manufacturer->getAddressCity(); ?></td>
+                <td><?php echo $manufacturer->getAddressCountry(); ?></td>
+                <td><?php echo $manufacturer->getContactName(); ?></td>
+                <td><?php echo $manufacturer->getContactPhone(); ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>

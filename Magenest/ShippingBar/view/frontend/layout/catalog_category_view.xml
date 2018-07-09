@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magenest_ShippingBar/css/animate.css"/>
+        <link src="Magenest_ShippingBar/js/wow.min_.js"/>
+    </head>
+    <body>
+        <referenceContainer name="header.container">
+            <block class="Magenest\ShippingBar\Block\CatalogProduct" template="Magenest_ShippingBar::shipping_bar.phtml"/>
+        </referenceContainer>
+    </body>
+</page>
+

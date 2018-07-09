@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2017 Magenest. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="admin-1column">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magenest\Blog\Block\Adminhtml\Post\Edit" name="edit">
+                <block class="Magenest\Blog\Block\Adminhtml\Post\Edit\Form" template="post/edit/form.phtml" name="form">
+                    <block name="sidebar" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar">
+                        <block name="publish" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Publish"/>
+                        <block name="countdown" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Countdown"/>
+                        <block name="categories" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Categories"/>
+                        <block name="stores" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Stores"/>
+                        <block name="tags" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Tags"/>
+                        <block name="author" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Author"/>
+                        <block name="image" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Sidebar\Image"/>
+                    </block>
+                    <block name="tabs" class="Magenest\Blog\Block\Adminhtml\Post\Edit\Tabs"/>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

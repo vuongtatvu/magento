@@ -1,0 +1,302 @@
+<?php if ($block->getVendors()->getId() < 0): ?>
+    <div>
+        <form method="post"
+              action="<?php echo $block->getUrl('vu/vendor/add') ?>"
+              id="form-validate">
+            <div class="col-m-6" xmlns="http://www.w3.org/1999/html">
+                <input name="customer_id"
+                       value="<?php echo $block->getCustomerId(); ?>"
+                       hidden/>
+                <fieldset class="fieldset admin__fieldset" id="theme">
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>First Name</span></label>
+                        <div class="admin__field-control control">
+                            <input name="first_name"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Last Name</span></label>
+                        <div class="admin__field-control control">
+                            <input name="last_name"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title required">
+                        <label class="label	admin__field-label">
+                            <span>Email</span></label>
+                        <div class="admin__field-control control">
+                            <input name="email" type="email"
+                                   id="email_validate"
+                                   data-validate="{required:true}"
+                                   value="" class="input-text admin__control-text"/>
+                        </div>
+                        <div for="email_validate" generated="true" class="mage-error" id="validate"></div>
+                    </div>
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Company</span></label>
+                        <div class="admin__field-control control">
+                            <input name="company"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Phone Number</span></label>
+                        <div class="admin__field-control control">
+                            <input name="phone_number"
+                                   value="" type="number" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Fax</span></label>
+                        <div class="admin__field-control control">
+                            <input name="fax"
+                                   value="" type="number" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Adress</span></label>
+                        <div class="admin__field-control control">
+                            <input name="address"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Street</span></label>
+                        <div class="admin__field-control control">
+                            <input name="street"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="admin__field field	">
+                        <label class="label	admin__field-label">
+                            <span>City</span></label>
+                        <div class="admin__field-control control">
+                            <input name="city"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+                    <div class="admin__field field	">
+                        <label class="label	admin__field-label">
+                            <span>Postcode</span></label>
+                        <div class="admin__field-control control">
+                            <input name="postcode"
+                                   value="" type="text" class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="primary" title="Submit" type="submit" id="submit-vendor">
+                            <span>Save</span>
+                        </button>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        </form>
+    </div>
+<?php else : ?>
+    <?php $vendor = $block->getVendors() ?>
+    <h2>My info</h2>
+    Name : <?php echo $vendor->getFirstName() . ' ' . $vendor->getLastName() ?><br>
+    Email : <?php echo $vendor->getEmail(); ?>
+    ....
+
+    <br>
+    <div>
+        <button id="click-me" class="primary" title="Submit">
+            <span>Edit</span>
+        </button>
+    </div>
+
+    <div class="col-m-6" id="popup-mpdal" style="display:none;">
+        <form method="post"
+              action="<?php echo $block->getUrl('vu/vendor/save') ?>"
+              id="form-validate">
+            <div class="col-m-6" xmlns="http://www.w3.org/1999/html">
+                <input name="id"
+                       value="<?php echo $vendor->getId(); ?>"
+                       hidden="hidden"/>
+                <fieldset class="fieldset admin__fieldset" id="theme">
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>First Name</span></label>
+                        <div class="admin__field-control control">
+                            <input name="first_name"
+                                   value="<?php echo $vendor->getFirstName() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Last Name</span></label>
+                        <div class="admin__field-control control">
+                            <input name="last_name"
+                                   value="<?php echo $vendor->getLastName() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title required">
+                        <label class="label	admin__field-label">
+                            <span>Email</span></label>
+                        <div class="admin__field-control control">
+                            <input name="email" type="email"
+                                   id="email_validate"
+                                   data-validate="{required:true}"
+                                   value="<?php echo $vendor->getEmail() ?>" class="input-text admin__control-text"/>
+                        </div>
+                        <div for="email_validate" generated="true" class="mage-error" id="validate"></div>
+                    </div>
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Company</span></label>
+                        <div class="admin__field-control control">
+                            <input name="company"
+                                   value="<?php echo $vendor->getCompany() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Phone Number</span></label>
+                        <div class="admin__field-control control">
+                            <input name="phone_number"
+                                   value="<?php echo $vendor->getPhoneNumber() ?>" type="number"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Fax</span></label>
+                        <div class="admin__field-control control">
+                            <input name="fax"
+                                   value="<?php echo $vendor->getFax() ?>" type="number"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Adress</span></label>
+                        <div class="admin__field-control control">
+                            <input name="address"
+                                   value="<?php echo $vendor->getAddress() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="field title">
+                        <label class="label	admin__field-label">
+                            <span>Street</span></label>
+                        <div class="admin__field-control control">
+                            <input name="street"
+                                   value="<?php echo $vendor->getStreet() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+                    <div class="admin__field field	">
+                        <label class="label	admin__field-label">
+                            <span>City</span></label>
+                        <div class="admin__field-control control">
+                            <input name="city"
+                                   value="<?php echo $vendor->getCity() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+                    <div class="admin__field field	">
+                        <label class="label	admin__field-label">
+                            <span>Postcode</span></label>
+                        <div class="admin__field-control control">
+                            <input name="postcode"
+                                   value="<?php echo $vendor->getPostcode() ?>" type="text"
+                                   class="input-text admin__control-text"/>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <button class="primary" title="Submit" type="submit" id="submit-vendor">
+                            <span>Save</span>
+                        </button>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        require(
+            [
+                'jquery',
+                'Magento_Ui/js/modal/modal',
+                'mage/mage'
+            ],
+            function ($, modal) {
+                var options = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    title: 'Vendor Information',
+                    buttons: false
+                };
+
+                var popup = modal(options, $('#popup-mpdal'));
+                $("#click-me").on('click', function () {
+                    $("#popup-mpdal").modal("openModal");
+                });
+
+
+            }
+        );
+    </script>
+<?php endif; ?>
+<script>
+    require([
+        'jquery',
+        'mage/mage'
+    ], function ($) {
+        var dataForm = $('#form-validate');
+        dataForm.mage('validation', {});
+
+        $("#email_validate").on('keyup', function () {
+
+            var email = $('#email_validate').val();
+
+            $.ajax({
+                type: "get",
+                url: "<?php echo $block->getUrl('vu/vendor/checkemail') ?>",
+                data: 'email=' + email,
+                success: function (data) {
+                    if ((data) == 'email ok') {
+                        $('#submit-vendor').prop('disabled', false);
+                        $("#validate").html('');
+                    }
+                    else {
+                        $('#submit-vendor').prop('disabled', true);
+                        $("#validate").html('This email address was exist');
+                    }
+                }
+
+            });
+        });
+    });
+
+</script>

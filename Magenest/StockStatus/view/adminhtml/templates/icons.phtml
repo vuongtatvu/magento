@@ -1,0 +1,66 @@
+<?php
+/** @var $block \Magenest\StockStatus\Block\Adminhtml\ManagerIcon\Icons */
+$baseURL = $block->getBaseUrl();
+$options = $block->getCustomStockStatus();
+?>
+<style>
+    #button-save-icon{
+        float: right;
+        margin-bottom: 20px;
+    }
+</style>
+<form id="manage_icon" method="post" action="<?= $baseURL.'admin/mageneststockstatus/icon/save' ?>" enctype="multipart/form-data">
+    <div id="button-save-icon">
+        <button style="padding: 15px;" class="action-default scalable save primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="<?= __('Save Icon Stock Status'); ?>">
+            <span><?= __('Save Icon Stock Status'); ?></span>
+        </button>
+    </div>
+    <div id="manage-options-panel">
+        <div id="manage-options-panel">
+            <table cellpadding="5" cellspacing="8" id="icons_table" class="admin__control-table" >
+                <tr>
+                    <th><?= __('Status Label') ?></th>
+                    <th><?= __('Upload icon image') ?></th>
+                    <th><?= __('Preview') ?></th>
+                    <th><?= __('Delete') ?></th>
+                </tr>
+                <?php
+                if(!empty($options)):
+                    foreach ($options as $option):
+                        if($option['value'] == ''):
+                            continue;
+                        endif;
+                ?>
+                    <tr>
+                        <td><?= $option['label'] ?></td>
+                        <td>
+                            <input type="file" name="magenest_icon[<?= $option['value'] ?>]">
+                        </td>
+                        <td>
+                            <?php if(isset($option['path']) && $option['path'] != ''):?>
+                                <img src="<?= $block->getIconImage($option['value'],$option['path']) ?>" width="50px;"/>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php
+                            if(isset($option['entity_id'])):
+                            ?>
+                                <input type="checkbox" value="1" name="magenest_icon_delete[<?= $option['entity_id'] ?>]">
+                            <?php
+                            else:
+                            ?>
+                                <input type="checkbox">
+                            <?php
+                            endif;
+                            ?>
+
+                        </td>
+                    </tr>
+                <?php
+                    endforeach;
+                endif;
+                ?>
+            </table>
+        </div>
+    </div>
+</form>

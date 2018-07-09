@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <shippingstore>
+            <shippingpage><enabled>0</enabled></shippingpage>
+        </shippingstore>
+        <shippingstore>
+            <shippingpage><shippingtype>1</shippingtype></shippingpage>
+        </shippingstore>
+        <shippingstore>
+            <shippingpage><shipping_goal>100</shipping_goal></shippingpage>
+        </shippingstore>
+
+        <shippingstore>
+            <wheretodisplay><page_delay>2</page_delay></wheretodisplay>
+        </shippingstore>
+        <shippingstore>
+            <wheretodisplay><page_display>1</page_display></wheretodisplay>
+        </shippingstore>
+        <shippingstore>
+            <wheretodisplay><display_type>bounceInDown</display_type></wheretodisplay>
+        </shippingstore>
+        <shippingstore>
+            <wheretodisplay><alow_close>0</alow_close></wheretodisplay>
+        </shippingstore>
+        <shippingstore>
+            <wheretodisplay><auto_hide>0</auto_hide></wheretodisplay>
+        </shippingstore>
+
+        <shippingstore>
+            <content><cart_empty>Free shipping on orders over {{ruleGoal}}</cart_empty></content>
+        </shippingstore>
+        <shippingstore>
+            <content><cart_not_empty>Only {{ruleGoalLeft}} left for free shipping</cart_not_empty></content>
+        </shippingstore>
+        <shippingstore>
+            <content><cart_goal>Great! your order will be delivered for free! </cart_goal></content>
+        </shippingstore>
+
+
+        <shippingstore><design>
+                <font_family>Open Sans</font_family></design>
+        </shippingstore>
+        <shippingstore>
+            <design><font_weight>bold</font_weight></design>
+        </shippingstore>
+        <shippingstore>
+            <design><font_size>22</font_size></design>
+        </shippingstore>
+        <shippingstore>
+            <design><font_color>#F1FFEB</font_color></design>
+        </shippingstore>
+        <shippingstore>
+            <design><background_color>#FF0000</background_color></design>
+        </shippingstore>
+        <shippingstore>
+            <design><text_align>center</text_align></design>
+        </shippingstore>
+
+        <shippingstore>
+            <schedule_date><enabled>0</enabled></schedule_date>
+        </shippingstore>
+        <shippingstore>
+            <schedule_week><enabled>0</enabled></schedule_week>
+        </shippingstore>
+        <shippingstore>
+            <schedule_day><enabled>0</enabled></schedule_day>
+        </shippingstore>
+    </default>
+</config>

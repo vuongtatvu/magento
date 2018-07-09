@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+        <!--
+        /**
+         * Copyright © 2015 Magento. All rights reserved.
+         * See COPYING.txt for license details.
+         */
+        -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <!--<head>-->
+        <!--<css src="Magenest_MapList::css/map.css"/>-->
+
+    <!--</head>-->
+    <body>
+
+        <referenceBlock name="top.links">
+            <block class="Magenest\MapList\Block\Link" name="map-list-header" after="header" template="Magenest_MapList::link.phtml">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Map List</argument>
+                </arguments>
+                <!-- <arguments>
+                     <argument name="jsLayout" xsi:type="array">
+                         <item name="components" xsi:type="array">
+                             <item name="map-header" xsi:type="array">
+                                 <item name="component" xsi:type="string">Magenest_MapList/js/view/header</item>
+                             </item>
+                         </item>
+                     </argument>
+                 </arguments>-->
+            </block>
+
+        </referenceBlock>
+        <move element="map-list-header" destination="header.links" before="-"/>
+
+    </body>
+</page>

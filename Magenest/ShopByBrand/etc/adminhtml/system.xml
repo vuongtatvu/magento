@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magenest" translate="label" sortOrder="100">
+            <label> Magenest</label>
+        </tab>
+        <section id="shopbybrand" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Shop By Brand</label>
+            <tab>magenest</tab>
+            <resource>Magenest_ShopByBrand::setting</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add to the menu </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="attribute" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Attribute Code </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="brandpage" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Brand Detail Page</label>
+                <field id="featured_product" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display Featured Products </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="featured_brand" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display Featured Brands </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show featured brands on the brand home page</comment>
+                </field>
+                <field id="categories_brand" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display Brand by Category </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_slider" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Show as Slider </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="group" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Brand Group By Category</label>
+                <field id="sidebar" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display Group SideBar </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="sidebar" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>SideBar</label>
+                <field id="template" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Select SideBar</label>
+                    <source_model>Magenest\ShopByBrand\Model\Config\SideBar</source_model>
+                </field>
+            </group>
+            <group id="brandstyle" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Brand Style</label>
+                <field id="template" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Select Style Brand</label>
+                    <source_model>Magenest\ShopByBrand\Model\Config\StyleBrand</source_model>
+                </field>
+            </group>
+            <group id="list" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Brand List Setup</label>
+                <field id="show" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display mode </label>
+                    <source_model>Magenest\ShopByBrand\Model\Config\Listing</source_model>
+                </field>
+            </group>
+            <group id="product" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Product Page Setup</label>
+                <field id="show" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display mode  </label>
+                    <source_model>Magenest\ShopByBrand\Model\Config\Product</source_model>
+                </field>
+                <field id="relate" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Number Product  </label>
+                    <source_model>Magenest\ShopByBrand\Model\Config\Relate</source_model>
+                </field>
+            </group>
+            <group id="page" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>All Brand Page Setup</label>
+                <field id="url" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>URL key</label>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Title</label>
+                </field>
+                <field id="keywords" translate="label" type="textarea" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Meta keywords</label>
+                </field>
+                <field id="description" translate="label" type="textarea" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Meta description</label>
+                </field>
+                <field id="page" translate="label" type="editor" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>All brands page description</label>
+                    <frontend_model>Magenest\ShopByBrand\Model\Config\Editor</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

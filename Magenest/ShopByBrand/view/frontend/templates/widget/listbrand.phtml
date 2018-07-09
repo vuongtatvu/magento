@@ -1,0 +1,39 @@
+<?php
+$datas = $block->getBrands();
+$baseBrandUrl = $block->getBaseBrandUrl();
+$baseImageUrl = $block->getBaseImageUrl();
+$slide = $block->getData('brand_slider');
+?>
+
+
+<div class="mn-brand-carousel" style="max-width: 98%;margin:0 auto 15px;">
+    <div class="owl-carousel" data-margin="10"
+         data-responsive='{"0":{"items":2},"480":{"items":2},"600":{"items":4},"992":{"items":8}}'
+         data-autoplayTimeout="600" data-autoplay="<?php echo $slide ? true : false; ?>" data-loop="true">
+        <?php foreach ($datas as $brand) : ?>
+            <div class="mn-item">
+                <a href='<?php echo $baseBrandUrl . '/' . $brand['url_key'] ?>' class="brand-img">
+                    <img src='<?php echo $block->getImage($brand) ?>' alt=<?php echo $brand['name'] ?>>
+                </a>
+                <a href='<?php echo $baseBrandUrl . '/' . $brand['url_key'] ?>' class="brand-name">
+                    <b><?php echo $brand['name'] ?></b>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magenest_ShopByBrand/js/owl.carousel'
+    ], function ($) {
+        $(".owl-carousel").each(function (index, el) {
+            var config = $(this).data();
+            config.navText = ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'];
+            config.smartSpeed = "800";
+            $(this).owlCarousel(config);
+        });
+    });
+</script>
+

@@ -1,0 +1,34 @@
+<?php
+
+$product = $block->getProdcutAssign();
+if ($product) {
+    ?>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <td>Product Name</td>
+            <td>SKU</td>
+            <td>Commission type</td>
+            <td>Commission value</td>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($product as $item) {
+            echo "<tr>";
+            echo "<td>" . $item->getName() . "</td>";
+            echo "<td>" . $item->getSku() . "</td>";
+            echo "<td>" . ($item->getCommissionType() ? $item->getCommissionType() : "") . "</td>";
+            echo "<td>" . ($item->getCommissionValue() ? $item->getCommissionValue() : "") . "</td>";
+            echo "</tr>";
+        }
+        ?>
+        </tbody>
+    </table>
+    <?php
+} else {
+    echo "Khong co san pham nao";
+}
+?>
+
+

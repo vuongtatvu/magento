@@ -1,0 +1,61 @@
+<div>
+    <button type="button" id="open_modal">Open Modal</button>
+    <button type="button" class="login">Open Magento Login Modal</button>
+    <button type="button" class="login">Open Custom Login Madal</button>
+</div>
+
+
+<div class="col-m-6" id="popup-modal" style="display:none;">
+    <div>
+        User name: <input name="user" id="user" type="text"/>
+    </div>
+    <div>
+        Password: <input name="password" id="password" type="password"/>
+    </div>
+    <div>
+        <button id="login" type="button">Login</button>
+    </div>
+</div>
+
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function ($, modal) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Login modal',
+                buttons: false
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+
+            $(".login").on('click', function () {
+                $("#popup-modal").modal("openModal");
+                
+            });
+        }
+    );
+    
+    require([
+            'jquery',
+            'Magento_Ui/js/modal/alert'
+        ],
+        function ($, alert) {
+            $('#open_modal').on('click', function (event) {
+                alert({
+                    title: '',
+                    content: 'Hello World',
+                    actions: {
+                        always: function () {
+                        }
+                    }
+                })
+            })
+        }
+    );
+</script>

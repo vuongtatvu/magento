@@ -1,0 +1,11 @@
+#status{
+    font-weight: bold;
+    color: #F1FFEB;
+    font-size: 150%;
+    border-color: #0000aa;
+    border: 2px solid #FF0000;
+    border-radius: 5px;
+    text-align: center;
+    float: left;
+    background-color: #FF0000
+}

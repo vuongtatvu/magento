@@ -1,0 +1,307 @@
+<?php
+// @codingStandardsIgnoreFile
+    $dataView = $block->getDataView();
+    $dataConfig = $block -> getConfig();
+    $unitSystem = $dataConfig['unit'];
+    $api_key = $dataConfig['mapApi'];
+    $baseUrl = $this->getBaseUrl();
+//var_dump($dataView);die();
+?>
+
+<div style="display: none" id="popup-modal">
+    <p id="geolocation_warning" style="display: none"><font color="red"><strong>SORRY, Geolocation service is not supported in your browsers. You need pick location manually to get direction</strong></font></p>
+    <h2>Store name: <a id="store_name"> </a></h2>
+    <h3>Start (Your Location): <a id="start_addr"> </a></h3>
+    <h3>End (Store Address): <a id="end_addr"> </a></h3>
+    <button onclick="geolocation();">Get Direction from your location</button>
+    <br>
+    <div id="map" style=""></div>
+    <div id="right-panel"></div>
+    <div id="location_address"></div>
+    <div id="location_phone_number"></div>
+    <div id="location_email"></div>
+    <div id="location_website"></div>
+    <img id="location_image" src="">
+    <div id="location_description"></div>
+</div>
+<style>
+    #map * {
+        overflow:visible;
+    }
+</style>
+<script>
+    var loc_array = <?php echo json_encode($dataView );?>;
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function($, modal) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Store Location',
+                buttons: [{
+                    text: $.mage.__('Close'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+            $('.location_list').each(function(index){
+               $(this).on("click",function () {
+                   $('#right-panel').empty();
+                   index_arr = $(this).find('input[name="index"]').val();
+                   cur_lat = loc_array[index_arr].latitude;
+                   cur_lng = loc_array[index_arr].longitude;
+                   marker_img = loc_array[index_arr].small_image_url;
+                   address = loc_array[index_arr].address;
+                   reloadmap();
+                   clearMarker();
+                   marker = placeMarker(map,cur_lat,cur_lng,marker_img);
+                   $('#end_addr').text(address);
+                   $('#store_name').text(loc_array[index_arr].title);
+                   $('#popup-modal').modal('openModal');
+                   geolocation();
+               })
+            });
+            //$('#popup-mpdal').modal('openModal');
+        }
+    );
+</script>
+
+<?php if (!!$dataView) { ?>
+    <div class="prettyMapList map_list-location">
+        <div id="map_location">
+            <h3><strong>Product available at </strong></h3>
+<!--            <button onclick="getDistance();" id="btn_closest_store">Find the closest Store</button>-->
+        </div>
+
+        <div id="ListContainer" style="max-height: 300px; overflow-y: scroll">
+            <ul class="unstyled prettyListItems">
+                <?php foreach ($dataView as $k => $location) { ?>
+                    <li>
+                        <div id="map_location_list" class="corePrettyStyle prettylink map location location_list">
+                            <input style="display: none" type="text" name="index" value="<?php echo $k ?>">
+                            <div class="">
+                                <a href="#"><?php echo $location['title'] ?></a>
+                                <div class="">
+                                    <?php echo $location['address'] ?>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
+            </ul>
+        </div>
+    </div>
+<?php } ?>
+
+<script>
+    var default_zoom = parseInt('<?php echo ($dataConfig['zoom']==""?15:$dataConfig['zoom']) ?>');
+    var default_travel_mode ='<?php echo $dataConfig['travel_mode'] ?>';
+    var directionsDisplay;
+    var directionsService;
+    var map;
+    var bounds;
+    var marker,marker2;
+    function myMap() {
+        directionsDisplay = new google.maps.DirectionsRenderer;
+        directionsService = new google.maps.DirectionsService;
+        var center = new google.maps.LatLng(-34.397,150.644);
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: default_zoom,
+            center: center,
+            mapTypeId: 'roadmap'
+        });
+
+        //add direction windows
+        directionsDisplay.setMap(map);
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
+
+        marker = placeMarker(map,-34.397,150.644);
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            if(typeof marker2 != 'undefined') {
+                marker2.setMap(null);
+            }
+            var pos ={
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            };
+            getAddress(pos.lat,pos.lng);
+            marker2 = placeMarker(map,pos.lat,pos.lng);
+
+            calculateAndDisplayRoute(directionsService, directionsDisplay,
+                marker2.position,marker.position);
+        });
+    }
+</script>
+<!--end google javascript API-->
+<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $api_key ?>&libraries=places&callback=myMap"
+        async defer></script>
+<script>
+    function getGoogleLoc(lat,lng){
+        return new google.maps.LatLng(lat,lng);
+    }
+    function clearMarker(){
+        marker.setMap(null);
+        if(typeof marker2 != 'undefined') {
+            marker2.setMap(null);
+        }
+    }
+    function placeMarker(map,lat,lng,marker_url=null) {
+        map.setCenter(getGoogleLoc(lat,lng));
+        return new google.maps.Marker({
+            position: getGoogleLoc(lat,lng),
+            map: map
+        });
+    }
+    function reloadmap(){
+        //when you resize the map, you lose your zoom and your center
+        //so you need to get them again here
+        z = map.getZoom();
+        c = map.getCenter();
+        google.maps.event.trigger(map, 'resize');
+        //and set them again here
+        map.setZoom(z);
+        map.setCenter(c);
+    }
+
+    function geolocation() {
+        if (navigator.geolocation) {
+            var location_timeout = setTimeout("geolocFail()", 5000);
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    clearTimeout(location_timeout);
+                    document.getElementById('geolocation_warning').style = "display: none";
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    getAddress(pos.lat, pos.lng);
+                    calculateAndDisplayRoute(directionsService, directionsDisplay,
+                        getGoogleLoc(pos.lat, pos.lng), marker.position);
+                }, function (error) {
+                    //document.getElementById('geolocation_warning').style = "";
+                    clearTimeout(location_timeout);
+                    geolocFail();
+
+                });
+
+        }else{
+            geolocFail();
+        }
+    }
+
+    function geolocFail(){
+        document.getElementById('geolocation_warning').style = "";
+    }
+
+    function calculateAndDisplayRoute(directionsService, directionsDisplay,origin, destination) {
+        clearMarker();
+        var unitSystem = <?php echo $unitSystem ?>;
+        directionsService.route({
+            origin: origin,
+            destination: destination,
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: unitSystem
+        }, function(response, status) {
+            if (status === 'OK') {
+                directionsDisplay.setDirections(response);
+            } else {
+                require(['jquery'], function ($) {
+                    $('#right-panel').empty();
+                });
+                window.alert('Sorry, we can not find the direction ' + status);
+            }
+        });
+    }
+
+    function getAddress(lat, lng){
+        require(['jquery'],function($){
+            $.ajax({
+                url: 'https://maps.googleapis.com/maps/api/geocode/json',
+                data: {
+                    sensor: false,
+                    latlng: lat+","+lng
+                },
+                success: function (data, textStatus) {
+                    var responses = data.results;
+                    if (data.status=='OK' && responses.length > 0) {
+                        address = (responses[0].formatted_address);
+                    } else {
+                        address = ('Unknown address');
+                    }
+                    $('#start_addr').text(address);
+                },
+                async: true
+            });
+        });
+    }
+
+    function getDistance() {
+        require([
+            'jquery'
+        ],function($){
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        var destinations = [];
+                        for (var i = 0; i < loc_array.length; i++) {
+                            destinations.push(new google.maps.LatLng(loc_array[i].latitude, loc_array[i].longitude));
+                        }
+                        var distanceMatrix = new google.maps.DistanceMatrixService();
+                        var distanceRequest = {
+                            origins: [new google.maps.LatLng(position.coords.latitude, position.coords.longitude)],
+                            destinations: destinations,
+                            travelMode: google.maps.TravelMode.DRIVING,
+                            avoidHighways: false,
+                            avoidTolls: false
+                        };
+                        distanceMatrix.getDistanceMatrix(distanceRequest, function (response, status) {
+                            if (status != google.maps.DistanceMatrixStatus.OK) {
+                                alert('Error was: ' + status);
+                            }
+                            else {
+                                var origin = response.originAddresses[0];
+                                var elements = response.rows[0].elements;
+                                var distance = [];
+                                for (var i = 0; i < elements.length; i++) {
+                                    distance.push(elements[i].distance.value);
+                                }
+                                var index = distance.indexOf(Math.min.apply(null, distance));
+                                var destination = response.destinationAddresses[index];
+                                reloadmap();
+                                clearMarker();
+                                $('#start_addr').text(origin);
+                                $('#end_addr').text(destination);
+                                $('#store_name').text(loc_array[index].title);
+                                marker = placeMarker(map,loc_array[index].latitude, loc_array[index].longitude);
+                                $('#popup-modal').modal('openModal');
+                                calculateAndDisplayRoute(directionsService, directionsDisplay,
+                                    getGoogleLoc(pos.lat, pos.lng),getGoogleLoc(loc_array[index].latitude, loc_array[index].longitude) );
+                            }
+                        });
+
+                    },
+                    function (error) {
+                        alert("SORRY, Geolocation service is not supported in your browsers !");
+                    },
+                    {
+                        maximumAge:10000,
+                        enableHighAccuracy:true
+                    });
+            }
+        })
+    }
+</script>

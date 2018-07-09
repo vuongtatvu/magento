@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="product.info.main">
+            <block class="Magenest\ShopByBrand\Block\Product\Brand" name="product.info.brand"   template="Magenest_ShopByBrand::product/product_brand.phtml"  />
+        </referenceContainer>
+        <referenceContainer name="content.aside"  >
+            <block class="Magenest\ShopByBrand\Block\Product\Relate" name="product.relate.brand"   template="Magenest_ShopByBrand::product/product_relate_brand.phtml"  />
+        </referenceContainer>
+    </body>
+</page>
+

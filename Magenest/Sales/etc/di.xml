@@ -1,0 +1,25 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+
+
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="sales_listing_data_source" xsi:type="string">Magenest\Sales\Model\ResourceModel\MagenestSales\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+
+    <virtualType name="Magenest\Sales\Model\ResourceModel\MagenestSales\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">magenest_sales</argument>
+            <argument name="resourceModel" xsi:type="string">Magenest\Sales\Model\ResourceModel\MagenestSales</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Customer\Model\Customer">
+        <plugin name="SalesAgentFirstName" type="Magenest\Sales\Plugin\SalesAgentFirstName" />
+    </type>
+
+</config>

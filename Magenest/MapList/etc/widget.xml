@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Widget/etc/widget.xsd">
+    <widget id="magenest_maplistwidget" class="Magenest\MapList\Block\Widget\ListMap">
+        <label translate="true">Magenest MapList: List Map</label>
+        <description>Widget in Magento2</description>
+    </widget>
+    <!--<widget id="magenest_maplist_store_widget" class="Magenest\MapList\Block\Widget\ListStore">-->
+        <!--<label translate="true">Magenest MapList: List Store</label>-->
+        <!--<description>Widget in Magento2</description>-->
+        <!--<parameters>-->
+            <!--<parameter name="map_id" xsi:type="text"  visible="true" sort_order="0" >-->
+                <!--<label translate="true">Input Map Id</label>-->
+            <!--</parameter>-->
+            <!--<parameter name="show_list" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno" visible="true" sort_order="10" >-->
+                <!--<label translate="true">Show list location</label>-->
+            <!--</parameter>-->
+        <!--</parameters>-->
+    <!--</widget>-->
+</widgets>

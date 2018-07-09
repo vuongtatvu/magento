@@ -1,0 +1,27 @@
+<table>
+    <tr>
+        <th>product-id</th>
+        <th>Room Name</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
+
+
+    <?php
+    $room = $block->getRoom();
+    foreach ($room as $roominfo) {
+        $price = $roominfo->getFoodPrice() + $roominfo->getDrinkPrice();
+        ?>
+        <tr>
+            <td><?= $roominfo->getProductId() ?></td>
+            <td><?= $roominfo->getAddress() ?></td>
+            <td><?= $price ?></td>
+            <td><button type="button" <?php echo $block->getIsCheck() ? "" : "disabled" ?>>Edit</button></td>
+        </tr>
+        <?php
+
+    }
+    ?>
+
+</table>
+<?php

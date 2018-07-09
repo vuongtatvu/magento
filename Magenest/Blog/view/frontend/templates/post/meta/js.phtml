@@ -1,0 +1,166 @@
+<?php
+//@codingStandardsIgnoreFile
+
+/** @var \Magenest\Blog\Block\Post\Meta $block */
+
+// solve error with template minification
+$countJs = '//';
+$countJs .= $block->getDisqusShortname() . '.disqus.com/count.js';
+?>
+
+<?php if ($block->getCommentProvider() == 'discus'): ?>
+    <script id="dsq-count-scr" src="<?= $countJs ?>"></script>
+<?php endif ?>
+
+<?php if ($block->getCommentProvider() == 'facebook'): ?>
+    <div id="fb-root"></div>
+    <script>(function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+<?php endif ?>
+
+<?php if ($block->isAddThisEnabled() && !$block->getCategory() && $block->getPost()): ?>
+    <h4 data-fontsize="13" data-lineheight="20">Share This Story, Choose Your Platform!</h4>
+    <div class="addthis_sharing_toolbox blog__post-meta-sharing">
+        <?php if ($block->isAddThisEnabled()): ?>
+            <script type="text/javascript"
+                    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-554788110b283abc"></script>
+        <?php endif ?>
+    </div>
+<?php endif ?>
+
+<?php if ($block->getCommentProvider() == 'insite'): ?>
+    <?php if ($block->getPost() && $block->getPost()->getId() > 0) : ?>
+        <div class="comment-form-wrap">
+            <div class="container">
+                <div class="list_comment">
+                    <?php /* @escapeNotVerified */
+                    $data = $block->getCommentData();
+                    ?>
+                    <?php if (!empty($data)): ?>
+                        <div class="block">
+                            <h3 id="comments-title">Comments</h3>
+
+                            <div class="block-content">
+                                <ol class="items">
+                                    <?php foreach ($data as $info): ?>
+
+                                        <li class="item review-item">
+                                            <b class="review-title"><?php /* @noEscape */
+                                                echo $info['name'] ?></b>
+                                            <p class="review-content"><?php /* @noEscape */
+                                                echo $info['comment'] ?></p>
+                                            <p class="review-date"><?php echo $info['created_at'] ?></p><br>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ol>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div id="respond" class="comment-respond">
+                    <h3 id="reply-title" class="size-36 comment-reply-title">Leave a Comment</h3>
+                    <form action="<?php /* @escapeNotVerified */
+                    echo $block->postComment(); ?>" method="post" id="commentform" class="np-form">
+                        <p class="text">
+                            <textarea class="comment" name="comment" placeholder="Write Comment" required=""></textarea>
+                        </p>
+                        <br>
+                        <div id="active-comment" style="display: none">
+                            <?php if ($block->checkCustomerLogin()): ?>
+                                <p>Post Comment
+                                    As: <?php echo $block->getCustomerName() . " / " . $block->getCustomerEmail(); ?></p>
+                                <input class="field" name="name" value="<?php echo $block->getCustomerName(); ?>"
+                                       type="hidden">
+                                <input class="field" name="email" value="<?php echo $block->getCustomerEmail(); ?>"
+                                       type="hidden">
+                            <?php else: ?>
+                                <div id="none_login">
+                                    <p>Fill in your details below to comment:</p><br>
+                                    <p class="name">
+                                        <input class="field" name="name" value="" placeholder="Name (required)"
+                                               required=""
+                                               type="text"
+                                               style="width: 40%">
+                                    </p><br>
+                                    <p class="email">
+                                        <input class="field" name="email" value="" placeholder="Email (required)"
+                                               required=""
+                                               type="email" style="width: 40%">
+                                    </p>
+                                </div>
+                            <?php endif; ?>
+                            <p class="path_return">
+                                <input class="field" name="path" value="<?php echo $block->getPathPage(); ?>"
+                                       type="text"
+                                       hidden>
+                            </p>
+                            <p class="post">
+                                <input class="field" name="post_id" value="<?php /* @escapeNotVerified */
+                                echo $block->getPost()->getId(); ?>"
+                                       type="text" hidden>
+                            </p>
+                            <br>
+                            <br>
+                            <p class="form-submit">
+                                <input name="submit" id="submit" class="btn btn-rwr action submit primary"
+                                       value="Post Comment" type="submit">&#09;&#09;&#09;
+                                <button type="button" name="cancel" id="cancel-comment"
+                                        class="btn btn-rwr action cancel"
+                                        value="Cancel">Cancel
+                                </button>
+                            </p>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif ?>
+
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        $(".comment").click(function () {
+            $("#active-comment").slideDown("slow");
+        });
+        $("#cancel-comment").click(function () {
+            $("#active-comment").slideUp("slow");
+        });
+        $('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">');
+    });
+</script>
+
+<style>
+    .at-share-btn-elements a.at-icon-wrapper.at-share-btn {
+        width: 50px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgb(0, 175, 240) !important;
+        border-radius: 16px !important;
+    }
+
+    .at-share-btn-elements a.at-icon-wrapper.at-share-btn.at-svc-compact {
+        background-color: rgb(255, 101, 80) !important;
+    }
+
+    .at-share-btn-elements a.at-icon-wrapper.at-share-btn span.at-icon-wrapper {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .at-share-btn-elements a.at-icon-wrapper.at-share-btn span.at-icon-wrapper svg.at-icon {
+        width: 24px !important;
+        height: 24px !important;
+    }
+</style>

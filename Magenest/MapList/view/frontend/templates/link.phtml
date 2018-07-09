@@ -1,0 +1,81 @@
+<?php
+// @codingStandardsIgnoreFile
+/**
+ * Created by Magenest
+ * User: Luu Thanh Thuy
+ * Date: 08/10/2016
+ * Time: 02:54
+ */
+$dataView = $block->getMapList();
+$baseUrl = $this->getBaseUrl();
+?>
+
+<li id="maplist_navmenu" class="customer-welcome">
+        <span class="customer-name" role="link" tabindex="0" data-toggle="dropdown"
+              data-trigger-keypress-button="true" aria-haspopup="true"
+              aria-expanded="false">
+            <span>Map list</span>
+            <button type="button" class="action switch" tabindex="-1" data-action="customer-menu-toggle">
+                <span>Change</span>
+            </button>
+        </span>
+
+    <div class="customer-menu" data-target="dropdown" aria-hidden="true">
+        <ul class="header links">
+
+            <?php
+            if (!!$dataView)
+                foreach ($dataView as $mapData) { ?>
+                    <li><a target="_blank" href="<?php echo $baseUrl . "maplist/index/index/id/" . $mapData['map_id'] ?>"><?php echo $mapData['title'] ?></a></li>
+                <?php } ?>
+        </ul>
+    </div>
+</li>
+
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        $(function () {
+            var selector = $('#maplist_navmenu');
+            selector.click(function ($) {
+                if (selector.hasClass("active")) {
+                    selector.removeClass("active");
+                } else {
+                    selector.addClass("active");
+                }
+            });
+        });
+    })
+</script>
+
+<!--<li class="link map">-->
+<!--    <span class="map-list-icon">Map List</span>-->
+<!---->
+<!--    <ul class="map-wrapper" data-role="map-container">-->
+<!--        --><?php
+//        $mapCollection = $block->getMapList();
+//        if ($mapCollection->getSize() > 0) {
+//            foreach ($mapCollection as $map) {
+//                ?>
+<!--                <li class="map-each">-->
+<!--                    <select  id="ticket_select_form" name="options" >-->
+<!--                        <option value="">Select...</option>-->
+<!--                        <option-->
+<!--                            id = "ticket_select"-->
+<!--                            class = "picker"-->
+<!--                            name = "drop_down_option"-->
+<!--                            value="--><?php //echo $map->getMapId(); ?><!--"-->
+<!--                        >-->
+<!--                            --><?php //echo $map->getTitle(); ?>
+<!--                        </option>-->
+<!--                </li>-->
+<!--                --><?php
+//            }
+//        }
+//        ?>
+<!---->
+<!--    </ul>-->
+<!---->
+<!---->
+<!--</li>-->

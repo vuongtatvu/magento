@@ -1,0 +1,30 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magenest\ShopByBrand\Block\Group\Listing
+ */
+?>
+<?php
+$brandUrl = $block->getBaseBrandUrl();
+$imageUrl = $block->getImageUrl();
+$allBrand = $block->getAllBrand();
+?>
+
+
+<h2 class='brand-heading_title'>Brands</h2>
+
+
+<div class="mn-view-list mn-view-list_style2">
+    <div class="mn-items">
+        <div class="mn-items-content">
+            <?php foreach ($allBrand as $brand) : ?>
+                <div class="mn-item ">
+                        <a href='<?php echo $brandUrl.'/'.$brand['url_key'] ?>' class="brand-img" >
+                            <img  src='<?php echo  $block->getImage($brand) ?>' alt=<?php echo $brand['name']  ?> ></a>
+                        <a href='<?php echo  $brandUrl.'/'.$brand['url_key'] ?>' class="brand-name"><?php echo $brand['name'] ?></a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>

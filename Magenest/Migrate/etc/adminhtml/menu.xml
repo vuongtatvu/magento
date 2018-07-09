@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu >
+        <add id="Magenest_Migrate::migrate"
+             title="Magenest"
+             module="Magenest_Migrate"
+             sortOrder="99"
+             parent="Magento_Backend::stores"
+             resource="Magenest_Migrate::mirgrate"
+        />
+        <add id="Magenest_Migrate::index"
+             title="Migrate Import Customer"
+             module="Magenest_Migrate"
+             action="migrate/index/"
+             sortOrder="99"
+             parent="Magenest_Migrate::migrate"
+             resource="Magenest_Migrate::index"
+        />
+    </menu>
+</config>

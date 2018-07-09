@@ -1,0 +1,33 @@
+<?php
+/**
+ * @var $block \Magenest\ShopByBrand\Block\Brand\SideBar
+ */
+
+$datas = $block->getBrandInfo();
+$baseBrandUrl = $block->getBaseBrandUrl();
+$i = 0;
+?>
+
+<div class="mn-brand-filter">
+    <h3 class='brand-heading_title'>Products Brand Filter</h3>
+    <div class="mn-items">
+        <?php foreach ($datas as $data) : ?>
+            <?php if ($i < 10) : ?>
+                <div class="mn-item">
+                    <a class="brand-name"
+                       href='<?php echo $baseBrandUrl . '/' . $data['url_key'] ?>'><?php echo $data['name'] ?>
+                        (<?php echo $data['summary'] ?>)</a>
+
+                </div>
+                <?php $i++; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+    <a class='brand_allview' href="<?php echo $baseBrandUrl ?>">
+        View all
+    </a>
+</div>
+
+
+
+

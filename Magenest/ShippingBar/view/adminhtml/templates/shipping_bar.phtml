@@ -1,0 +1,58 @@
+<?php
+
+$type = $block->getType();
+$goal = $block->getValue();
+
+$second = $block->getDelay();
+$fontfamily = $block->getFontFamily();
+$fontcolor = $block->getFontColor();
+$fontsize = $block->getFontSize() . "px";
+$fontweight = $block->getFontWeight();
+$textalign = $block->getTextAlign();
+$backgroundcolor = $block->getBackgroundColor();
+
+$alowClose = $block->getAlowCLose();
+$displaytype = $block->getDisplayType();
+
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        #status {
+            font-family: "<?php echo $fontfamily; ?>";
+            font-weight: <?php echo $fontweight; ?>;
+            color: <?php echo $fontcolor ?>;
+            font-size: <?php echo $fontsize; ?>;
+            border-color: #0000aa;
+            border: 2px solid #FF0000;
+            border-radius: 5px;
+            text-align: <?php echo $textalign;?>;
+            float: left;
+            background-color: <?php echo $backgroundcolor;?>;
+            width: 100%;
+        }
+
+        #close {
+            float: right;
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 1.5rem;
+        }
+
+    </style>
+</head>
+<body>
+<div data-wow-delay="5s" style="display: block;" id='status'>
+    Free shipping on orders over <?php echo ($type == '1') ? $goal . ' $' : $goal . ' Product' ?>
+    <span><a id="close"><?php echo ($alowClose) ? 'x' : '' ?></a></span>
+
+</div>
+</body>
+
+</html>
+
+
+

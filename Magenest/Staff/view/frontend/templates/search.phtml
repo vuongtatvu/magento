@@ -1,0 +1,40 @@
+<div>
+    <div class="col-m-6">
+
+        <div>Search Staff <input type="text" id="tim" name="tim">
+        </div>
+        <br>
+        <div><input style="align-content: center" type="submit" name="edit" id="edit" value="Search"></div>
+    </div>
+</div>
+<hr>
+<div id="result"></div>
+
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert'
+    ], function ($, alert) {
+        $('#edit').on('click', function () { //su kien click vao element co id='send2'
+
+                var url = '<?php /* @escapeNotVerified */ echo $block->getUrl('staff/staff/show');?>';
+
+                var tim = $('#tim').val();
+
+                var param = {search: tim };
+                $.ajax({
+                    showLoader: true,
+                    url: url,
+                    data: param,
+                    type: "POST",
+                    dataType: 'json'
+                }).done(function (data) {
+                    $('#result').text("");
+                    $('#result').text(data.message);
+                })
+
+            }
+        )
+    })
+</script>
+

@@ -1,0 +1,15 @@
+<!--<form id="form_migrate_customer" action="--><?php //echo $block->getUrl('*/*/importcustomer'); ?><!--" method="POST" enctype="multipart/form-data">-->
+<!--    --><?php //echo $block->getBlockHtml('formkey'); ?>
+<!--    <label>Import Customer: </label><br>-->
+<!--    <input type="file" class="required-entry" name="customer" />-->
+<!--    <button type="submit">Import</button>-->
+<!--</form>-->
+<!--<br><br>-->
+
+<form id="form_migrate_order" action="<?php echo $block->getUrl('*/*/importorder'); ?>" method="POST" enctype="multipart/form-data">
+    <?php echo $block->getBlockHtml('formkey'); ?>
+    <label>Import Order: </label><br>
+    <input type="file" class="required-entry" name="order" />
+    <button type="submit">Import</button>
+</form>
+
